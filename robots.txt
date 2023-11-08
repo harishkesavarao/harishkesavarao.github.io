@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://harishkesavarao.github.io/hkr-folio/sitemap.xml
+Sitemap: http://harishkesavarao.github.io//sitemap.xml
