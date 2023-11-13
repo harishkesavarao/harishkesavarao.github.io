@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: http://harishkesavarao.github.io//sitemap.xml
+Sitemap: https://harishkesavarao.github.io//sitemap.xml
