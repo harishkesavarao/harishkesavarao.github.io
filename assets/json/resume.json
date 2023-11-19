@@ -19,7 +19,6 @@
       "name": "Databricks",
       "position": "Staff Software Engineer",
       "startDate": "2022-05-01",
-      "endDate": "",
       "summary": "Deploying data pipelines and associated resources on AWS, Azure via Terraform (HCL) on Databricks workspaces.\nCreating spark ingestion notebooks, tuning streaming and batch spark jobs and clusters on Azure and AWS.\nIngesting data from REST APIs and storing them on AWS S3 via standard Python frameworks.",
       "highlights": [
         "AWS",
@@ -117,27 +116,11 @@
       "endDate": "2007"
     }
   ],
-  "awards": [
-    {
-      "title": "Nobel Prize in Physics",
-      "date": "1921-11-01",
-      "awarder": "Royal Swedish Academy of Sciences",
-      "summary": "The Nobel Prizes are five separate prizes that, according to Alfred Nobel's will of 1895, are awarded to 'those who, during the preceding year, have conferred the greatest benefit to humankind.'"
-    }
-  ],
+  "awards": [],
   "certificates": [],
   "publications": [],
-  "skills": [],
-  "languages": [
-    {
-      "language": "German",
-      "fluency": "Native speaker"
-    },
-    {
-      "language": "English",
-      "fluency": "Fluent"
-    }
-  ],
+  "skills": [{ "Code":["Python", "Scala"]}, {"Data": ["Spark", "Databricks", "Hive"]}, {",Cloud": ["AWS", "Azure"]}, {"CI/CD/Automation":["Terraform", "Docker", "GitHub Actions"]}],
+  "languages": [],
   "interests": [],
   "references": [],
   "projects": []
