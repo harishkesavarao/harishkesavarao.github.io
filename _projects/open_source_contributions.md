@@ -1,16 +1,13 @@
 ---
 layout: page
-title: project 3
-description: a project that redirects to another website
-img: assets/img/7.jpg
-redirect: https://unsplash.com
-importance: 3
+title: Open Source Contributions
+description: Contributions to Apache Airflow
+img: assets/img/airflow_white_bg.jpg
+importance: 1
 category: work
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+Periodically, I make Open Source contributions in the way of features and doing code reviews.
 
 To give your project a background in the portfolio page, just add the img tag to the front matter like so:
 
@@ -18,7 +15,7 @@ To give your project a background in the portfolio page, just add the img tag to
     layout: page
     title: project
     description: a project with a background image
-    img: /assets/img/12.jpg
+    img: /assets/img/airflow_white_bg.jpg
     ---
 
 <div class="row">
