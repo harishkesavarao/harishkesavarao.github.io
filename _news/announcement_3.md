@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Created the Databricks Partition Sensor (for the Databricks Provider) for Apache Airflow.
+Created the [Databricks Partition Sensor](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators/sql.html#databrickspartitionsensor) (for the Databricks Provider) for Apache Airflow.
