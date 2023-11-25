@@ -3,8 +3,6 @@
   contents:
     - name: Full Name
       value: Harish Kesava Rao
-    - name: Date of Birth
-      value:
     - name: Languages
       value: English
 
@@ -15,83 +13,98 @@
       institution: University of Arizona, Tucson, AZ, USA
       year: 2011
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
+        - Major in Management Information Systems.
+        - Nationally, number 1 public graduate information systems program.
+        - title: Courses
           contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
+            - Enterprise Data Management
+            - Business Intelligence
+            - Business Communication
+            - Web Mining and Analytics
+            - Data Mining
+            - Software Design Patterns
+            - Operations Management
+    - title: Bachelor of Technology
+      institution: Anna University
+      year: 2007
       description:
-        - Description 1.
-        - Description 2.
+        - Major in Information Technology.
 
 - title: Experience
   type: time_table
   contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
+    - title: Staff Software Engineer, Data Infrastructure
+      institution: Databricks
+      year: 2022 - Present
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
+        - Deploying data pipelines and associated resources on AWS, Azure via Terraform (HCL) on Databricks workspaces.
+        - Creating spark ingestion notebooks, tuning streaming and batch spark jobs and clusters on Azure and AWS.
+        - Ingesting data from REST APIs and storing them on AWS S3 via standard Python frameworks.
+        - title: Key areas/skills.
           contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
+            - Databricks
+            - Delta lake
+            - AWS - S3, SQS, SNS, Kinesis, CodeBuild
+            - Azure - Storage Blob, Eventgrid, Eventhubs
+            - Spark - Streaming, batch, performance tuning
+            - Terraform - resource management automation for Databricks, AWS and Azure resources.
+            - Parquet, JSON file management
+            - Hive metastore
+    - title: Senior Data Engineer
+      institution: Salesforce
+      year: 2021 - 2022
       description:
-        - Description 1.
-        - Description 2.
-
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
-
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
+        - Augment Tableau's license lifecycle analysis with AWS compute and storage alongside Snowflake.
+        - title: Key areas/skills.
+          contents:
+            - AWS - S3, EMR, Pyspark.
+            - Snowflake
+            - Tableau integration with Python.
+    - title: Senior Data Engineer
+      institution: Amazon Prime Video
+      year: 2020 - 2021
       description:
-
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
+        - First Data Engineer for Prime Video Search.
+        - Designed and implemented a Data Lake for Prime Video Search using EMR, Spark, Scala, S3, Athena, Tableau, SageMaker.
+        - title: Key areas/skills.
+          contents:
+            - AWS - EMR, S3, SageMaker, Athena, Pyspark.
+    - title: Senior Data Engineer
+      institution: Indeed
+      year: 2017 - 2020
+      description:
+        - Designed, standardized and automated DW/data pipelines using Postgres, Hive, Hadoop, Snowflake and Airflow.
+        - title: Key areas/skills.
+          contents:
+            - Python
+            - Postgres
+            - Pyspark
+            - Hive
+            - Docker
+            - Airflow
+    - title: Senior ETL Engineer
+      institution: Informatica
+      year: 2014 - 2017
+      description:
+        - Developed and deployed ETL pipelines, data warehouses in Oracle, MySQL, MS SQL Server, Netezza, Teradata using Informatica.
+        - Used Python to implement pipelines to consume raw/unstructured data.
+        - title: Key areas/skills.
+          contents:
+            - Informatica PowerCenter, Data Quality, Metadata Manager, Data Replication, Big Data Edition, Cloud Edition.
+            - Python
+    - title: Presales Technical Consultant
+      institution: Informatica
+      year: 2012 - 2013
+      description:
+        - Product demos for prospects, technical Proof Of Concept engagements.
+        - title: Key areas/skills.
+          contents:
+            - Informatica PowerCenter.
 
 - title: Open Source Projects
   type: time_table
   contents:
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
+    - title: Contributions to Apache Airflow
+      year: 2021 - now
+      description: Contributions to various providers in Airflow.
 
-- title: Honors and Awards
-  type: time_table
-  contents:
-    - year: 1921
-      items: 
-        - Nobel Prize in Physics 
-        - Matteucci Medal
-    - year: 2029
-      items: 
-        - Max Planck Medal
-
-- title: Academic Interests
-  type: nested_list
-  contents:
-    - title: Topic 1.
-      items: 
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
-      items:
-        - Description 1.
-        - Description 2.
-
-- title: Other Interests
-  type: list
-  contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
