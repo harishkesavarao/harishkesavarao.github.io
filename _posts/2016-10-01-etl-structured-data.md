@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Parsing data from structured data sources.
-date: 2019-11-23 08:18:00
+date: 2016-10-01 05:18:00
 description: Parsing and transforming structured data.
 related_posts: false
 tags: excel transformation postgres etl python
