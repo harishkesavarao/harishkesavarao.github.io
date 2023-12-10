@@ -4,7 +4,7 @@ title: Open Source Contributions
 description: Contributions to OSS projects
 img: assets/img/airflow_white_bg.png
 importance: 1
-category: work
+category: side-projects
 ---
 
 Periodically, I make Open Source contributions in the way of features and doing code reviews.
