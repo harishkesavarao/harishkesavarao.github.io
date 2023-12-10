@@ -13,10 +13,12 @@ toc:
 
 ## Introduction
 
+
 ## Use cases
 ### Extraction
 ### Transformation
 ### Storage and Business Intelligence
+
 
 ## Design choices
 ### Off-the-shelf products.
