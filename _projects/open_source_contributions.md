@@ -3,7 +3,7 @@ layout: page
 title: Open Source Contributions
 description: Contributions to OSS projects
 img: assets/img/airflow_white_bg.png
-importance: 1
+importance: 2
 category: side-projects
 ---
 
