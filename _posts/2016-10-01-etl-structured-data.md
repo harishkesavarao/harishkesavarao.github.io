@@ -9,21 +9,21 @@ toc:
   beginning: true
 ---
 
-# Parsing and transforming structured data
-
-## Introduction
-
-## Use cases
-### Extraction
-### Transformation
-### Storage and Business Intelligence
-
-## Design choices
-### Off-the-shelf products.
-### Connectivity via MS SQL Server.
-### Custom solution
-
-## Implementation
+# Introduction
 
 
-## Conclusion
+# Use cases
+## Extraction
+## Transformation
+## Storage and Business Intelligence
+
+
+# Design choices
+## Off-the-shelf products.
+## Connectivity via MS SQL Server.
+## Custom solution
+
+# Implementation
+
+
+# Conclusion
