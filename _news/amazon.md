@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Joined Amazon Prime Video as their first Data Engineer for Prime Video Search.
+Joined Amazon Prime Video as their first (Senior) Data Engineer for Prime Video Search.
