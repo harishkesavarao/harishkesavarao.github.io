@@ -33,10 +33,11 @@
 - title: Experience
   type: time_table
   contents:
-    - title: Staff Software Engineer, Data Infrastructure
+    - title: Staff Software Engineer/Team Lead, Data Infrastructure
       institution: Databricks
       year: 2022 - Present
       description:
+        - Managing multiple large-scale Data Engineering initiatives. Mentoring and advising Data Engineers.
         - Deploying data pipelines and associated resources on AWS, Azure via Terraform (HCL) on Databricks workspaces.
         - Creating spark ingestion notebooks, tuning streaming and batch spark jobs and clusters on Azure and AWS.
         - Ingesting data from REST APIs and storing them on AWS S3 via standard Python frameworks.
