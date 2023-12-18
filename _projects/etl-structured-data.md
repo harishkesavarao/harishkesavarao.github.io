@@ -48,21 +48,25 @@ This option could have been pursued by an ELT pipeline/connection, where you lan
 This will work quite well, but it did come with some [restrictions](https://learn.microsoft.com/en-us/sql/integration-services/load-data-to-from-excel-with-ssis?view=sql-server-ver16#issues-importing).It also requires using Microsoft SSIS along with MS SQL Server, adding to the number of hops for the data as well as complexity.
 
 ### Custom scripting
-Finally, having decided to pursue the scription route, I decided to use Python. Based on my past experience with Python for similar use cases (professionally as well as in other side projects),  it is best suited for data analysis due to its large library support for data exploration, modification and analysis. Python also allows using Pandas, which makes data transformation even simpler and customizable. 
+Finally, having decided to pursue the scription route, I decided to use Python. Based on my past experience with Python for similar use cases (professionally as well as in other side projects),  it is best suited for data analysis due to its large library support for data exploration, modification and analysis. Python also allows using a variety of built-in libraries, including Pandas, which makes data transformation even simpler and customizable. 
 
 ## Transformation
+Going back to the considerations section, we have both querying and reporting use cases. As I explained the extraction section above as well as the storage section below, the destination is a relational database.  
 
+The most suited structure to allow efficient reporting is a [star schema](https://www.kimballgroup.com/1997/08/a-dimensional-modeling-manifesto/). 
+
+### Implementation steps
+1. Extract the data from the MS Excel sheets via Python. This includes the logic to identify and parse all the relevant files, to detect changes to existing files and to detect newly added files.
+2. Write the required/selected data from the sheets/documents into a staging schema in MS SQL Server.
+3. Write an ETL flow to convert the transactional schema to a dimensional schema, with appropriate dimensions and facts.
+
+### Some nuances and additional facts related to the above steps
+
+Initially, I explored Pandas to extract and transform the data. However, due to the structure of the data, this method proved cumbersome and slow. The entire dataset had to be read into a Pandas Dataframe and selection, filtering and data presentation for the final step was tedious. 
+
+So, I used the 
 
 ## Storage and Business Intelligence
-
-
-
-# Design choices
-## Off-the-shelf products.
-## Connectivity via MS SQL Server.
-## Custom solution
-
-# Implementation
 
 
 # Conclusion
