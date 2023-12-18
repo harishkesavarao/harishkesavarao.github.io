@@ -64,7 +64,7 @@ The most suited structure to allow efficient reporting is a [star schema](https:
 
 Initially, I explored Pandas to extract and transform the data. However, due to the structure of the data, this method proved cumbersome and slow. The entire dataset had to be read into a Pandas Dataframe and selection, filtering and data presentation for the final step was tedious. 
 
-So, I used the 
+So, I used the `openpyxl` [library](https://openpyxl.readthedocs.io/en/stable/). The library contains a rich set of features for reading MS Excel data.
 
 ## Storage and Business Intelligence
 
