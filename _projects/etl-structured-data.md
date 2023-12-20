@@ -66,7 +66,44 @@ Initially, I explored Pandas to extract and transform the data. However, due to 
 
 So, I used the `openpyxl` [library](https://openpyxl.readthedocs.io/en/stable/). The library contains a rich set of features for reading MS Excel data.
 
-## Storage and Business Intelligence
+Example code snippets from Openpyxl:
 
+```
+from openpyxl import load_workbook
+
+# Open and load data from an existing Microsoft Excel workbook
+wb = load_workbook(filename = 'empty_book.xlsx')
+
+for sheet in wb:
+    print(sheet.title)
+
+# To access all rows in the active sheet
+ws = wb.active
+for row in ws.iter_rows(min_row=1, max_col=3, max_row=2):
+    for cell in row:
+        print(cell)
+        
+# To access all columns in the active sheet
+for col in ws.iter_cols(min_row=1, max_col=3, max_row=2):
+    for cell in col:
+        print(cell)
+
+# Selecting all the values from a sheet
+for row in ws.values:
+   for value in row:
+     print(value)
+```
+
+## Storage and Business Intelligence
+I discussed this briefly in the transformation section's implementation steps.
+
+Once the data from the spreadsheets land into the staging schema of Microsoft SQL Server, a separate pipeline starts ingesting this data into a dimensional model: with identified dimensions and facts(measures). 
+
+Some key dimensions: `date, products, versions`.
+
+For the reporting layer, Tableau was a good choice. MS SQL Server connects quite well with Tableau and different kinds of dashboards were built (by me and users) on top of the star schema tables. I wrote some views on top of the tables as well, primarily to join the dimension and fact tables.
 
 # Conclusion
+This was an interesting project to convert structured data into a dimensional model. This also allowed some experimentation with Python which was later used in other projects.
+
+Overall, the dimensional model and the Tableau dashboards allowed users to access and visualize data in new ways and to make decisions out of them.
