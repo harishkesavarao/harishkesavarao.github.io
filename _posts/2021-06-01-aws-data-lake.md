@@ -31,12 +31,16 @@ First, we will try to see the different pieces of a typical big data flow. Then,
 # Data sources
 Typically, data sources come from within AWS itself. In rare exceptions, the data comes from outside the cloud, or from another cloud provider. We will discuss both scenarios.
 
-## S3
+## AWS S3
+[AWS S3 (Simple Storage Service)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) is one of the most common use cases of consuming data in AWS. You can read about the basics (buckets, etc.) of S3 from the documentation link.
 ### Storage
+When talking about ingesting/reading data from S3, or interacting with other AWS services for that matter, there are some items to note. The S3 bucket containing the data of interest may or may not reside in the same AWS account from which we are reading it. To understand more about AWS accounts, AWS organizations need to be discussed as well. You can read more about it [here](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html). Read this [documentation](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts.html) to know more about how AWS organizations and AWS accounts are related.
 ### Retention
 ### Versioning
 ### Security
 ### Encryption
+### Cost
+#### Multi-region data
 
 ## Redshift
 ### Analytics
@@ -46,9 +50,17 @@ Typically, data sources come from within AWS itself. In rare exceptions, the dat
 
 ## Cloudwatch
 
+## External data sources
+### From an on-premise source 
+### From another cloud provider
+### Others
+Flat files
+Spreadsheets
+SaaS systems/APIs 
+
 # Destination
 
-# Design and Implementation
+# Design decisions, trade-offs 
 ## Compute
 ### EC2
 ### EMR
@@ -57,19 +69,27 @@ Typically, data sources come from within AWS itself. In rare exceptions, the dat
 ## Storage
 ### S3
 
+# ETL
 ## Security and permissions
 
-## Costs and Scaling up/down
 
-## Alerting and Monitoring
+## Batch vs. Streaming
+
+# Costs and Scaling up/down
+## Compute
+## Storage
+## In-flight data
+
+# Alerting and Monitoring
 ## Cloudwatch
 ## Eventbridge
 
 ## Performance Tuning
 
+# Analytics
 ## Cataloging, accuracy and governance
 
-## Analytics
+## Tooling
 ### Quicksight
 ### Sagemaker
 ### Tableau
