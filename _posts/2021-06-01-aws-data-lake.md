@@ -25,6 +25,7 @@ In order to fully understand or follow along with the article, I recommend readi
 - [AWS Containers](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/containers.html).
 - [AWS Application Integration](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/application-integration.html).
 - [AWS IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html).
+- [What is a Data Lake](https://aws.amazon.com/what-is/data-lake/).
 
 ### Advanced reading
 - [AWS Networking Services](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/networking-services.html).
@@ -34,9 +35,8 @@ In order to fully understand or follow along with the article, I recommend readi
 - [AWS Databases](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html).
 
 ## What is a Data Lake?
+[Reading for this section: What is a Data Lake](#pre-requisite-reading)
 > A data lake is a centralized repository that allows you to store all your structured and unstructured data at any scale. You can store your data as-is, without having to first structure the data, and run different types of analytics—from dashboards and visualizations to big data processing, real-time analytics, and machine learning to guide better decisions.
-
-The AWS website has a good [article](https://aws.amazon.com/what-is/data-lake/) which explains more about a Data Lake and how it compares to a traditional data warehouse, 
 
 # Use cases
 It is cost effective and performant to build a Data Lake when the data volume is over a certain threshold. The threshold is usually in the tens of GBs of data per day and continues to accumulate over time. If the data volume is less than that, it would be quicker and cheaper to build a traditional data warehouse or other solutions.
@@ -55,10 +55,13 @@ Typically, data sources come from within AWS itself. In rare exceptions, the dat
 
 ## AWS S3
 [AWS S3 (Simple Storage Service)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) is one of the most common use cases of consuming data in AWS. You can read about the basics (buckets, etc.) of S3 from the documentation link.
-### Storage
-The S3 bucket containing the data of interest may or may not reside in the same AWS account from which we are reading it. Before proceeding, please read the AWS organizations and AWS accounts in the [pre-requisite reading](#pre-requisite-reading) section. 
-### Retention
-### Versioning
+### Cross-account storage
+[Reading for this section: AWS Organizations and AWS Accounts](#pre-requisite-reading)
+Sometimes, the S3 bucket containing the data of interest may not reside in the same AWS account from which we are reading it. To begin reading from such external accounts, the required permissions need to be in place.
+
+
+
+### Storage lifecycle and other related items
 ### Security
 ### Encryption
 ### Cost
