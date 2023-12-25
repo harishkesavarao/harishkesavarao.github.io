@@ -34,6 +34,19 @@ In order to fully understand or follow along with the article, I recommend readi
 - [Cost management in AWS](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/aws-cost-management.html).
 - [AWS Databases](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html).
 
+### Infrastructure as Code
+All of the AWS resources discussed can be created manually via the AWS Management Console. 
+
+In a production deployment, that is seldom the case. We typically use an [Infrastructure as Code](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/infrastructure-as-code) deployment to manage resources. There are a few IaC options, Terraform and AWS CDK being the most popular. 
+
+I have worked on both and there are pros and cons with both. 
+
+AWS CDK allows many commonly used languages to define resources - such as Python, Java, TypeScript, Go, JavaScript etc. AWS CDK uses [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-whatis-concepts.html) behind the scenes to deploy resources. It also comes with the same limitations as [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html).
+
+Terraform uses its own [configuration language](https://developer.hashicorp.com/terraform/language) across different clouds, which is convenient if you have a multi-cloud infrastructure. It might take some time to learn Terraform's configuration language, but isn't that difficult as you begin creating and deploying different resources to AWS (or to any other cloud for that matter). Terraform uses declarative syntax as opposed to other common programming langauges.
+
+To illustrate resource creation in this article, I will use Terraform examples for resource creation. 
+
 ## What is a Data Lake?
 [Reading for this section: What is a Data Lake](#pre-requisite-reading)
 > A data lake is a centralized repository that allows you to store all your structured and unstructured data at any scale. You can store your data as-is, without having to first structure the data, and run different types of analytics—from dashboards and visualizations to big data processing, real-time analytics, and machine learning to guide better decisions.
@@ -58,6 +71,13 @@ Typically, data sources come from within AWS itself. In rare exceptions, the dat
 ### Cross-account storage
 [Reading for this section: AWS Organizations and AWS Accounts](#pre-requisite-reading)
 Sometimes, the S3 bucket containing the data of interest may not reside in the same AWS account from which we are reading it. To begin reading from such external accounts, the required permissions need to be in place.
+
+1. Role in destination account.
+2. Role in source/data source account.
+3. Trust policy in source/data source account.
+4. Policy related to the source/data source account. 
+
+
 
 
 
