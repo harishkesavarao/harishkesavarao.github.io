@@ -87,8 +87,9 @@ Key roles and policies:
   "Version": "2012-10-17",
   "Statement": [
     {
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.UCKET1/*"
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET1/*"
     }
   ]
 }
