@@ -264,7 +264,7 @@ resource "aws_s3_bucket" "mybucket" {
 resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
   bucket = aws_s3_bucket.mybucket.id
 
-  rule {
+  rule {https://repost.aws/knowledge-center/s3-large-transfer-between-buckets
     apply_server_side_encryption_by_default {
       kms_master_key_id = aws_kms_key.mykey.arn
       sse_algorithm     = "aws:kms"
@@ -438,7 +438,7 @@ resource "aws_cur_report_definition" "example_cur_report_definition" {
   additional_schema_elements = ["RESOURCES", "SPLIT_COST_ALLOCATION_DATA"]
   s3_bucket                  = "example-bucket-name"
   s3_region                  = "us-east-1"
-  additional_artifacts       = ["REDSHIFT", "QUICKSIGHT"]
+  additional_artifacts       = ["REDSHIFT", "QUICKSIGHT"]https://repost.aws/knowledge-center/s3-large-transfer-between-buckets
 }
 ```
 <cite>-- Terraform Docs.</cite>
@@ -451,13 +451,15 @@ Some options:
 
 Each service in AWS has its own pricing, so it important to note them and use them accordingly. 
 
-## Redshift
-### Analytics
-### Performance and scaling
+### Data ingestion between source and destination AWS S3 buckets
+There are many ways to transfer large volumes of data between two S3 buckets. AWS describes them very well [here](https://repost.aws/knowledge-center/s3-large-transfer-between-buckets). 
 
-## Kinesis
+Additionally, one other option is to setup downstream trigger jobs to run when a new event occurs in the AWS S3 bucket. We previously discussed setting up [notifications](#security) for events in AWS S3 buckets. The same setup can be used here. Once the SNS is setup, the destination AWS account can listen to these notifications via the AWS Simple Queue Service (SQS). The implementation is discussed [here](https://docs.aws.amazon.com/sns/latest/dg/sns-send-message-to-sqs-cross-account.html). Once the message is received from the Queue, you can write your own [application](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/examples-sqs-messages.html#sqs-messages-receive) to ingest the data and write it to a destination of your choice, which could be another AWS S3 bucket or a Delta table etc.
 
-## Cloudwatch
+## AWS Kinesis
+One of the most popular ways of sending and receiving large volumes of data is AWS Kinesis, via streaming. This is one of the most comprehensive [whitepapers](https://d0.awsstatic.com/whitepapers/whitepaper-streaming-data-solutions-on-aws-with-amazon-kinesis.pdf) explaining different Kinesis use cases as well as tooling/services to consume/sink data from Kinesis.
+
+Since the whitepaper explains everything in detail, I will not elaborate on different options available with Kinesis.
 
 ## External data sources
 ### From an on-premise source 
@@ -466,8 +468,6 @@ Each service in AWS has its own pricing, so it important to note them and use th
 Flat files
 Spreadsheets
 SaaS systems/APIs 
-
-# Destination
 
 # Design decisions, trade-offs 
 ## Compute
@@ -480,7 +480,6 @@ SaaS systems/APIs
 
 # ETL
 ## Security and permissions
-
 
 ## Batch vs. Streaming
 
@@ -499,6 +498,9 @@ SaaS systems/APIs
 ## Cataloging, accuracy and governance
 
 ## Tooling
+### Redshift
+**Usage**
+**Performance and scaling**
 ### Quicksight
 ### Sagemaker
 ### Tableau
