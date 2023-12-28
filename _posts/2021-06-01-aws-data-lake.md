@@ -247,6 +247,7 @@ Securing the objects in AWS S3 buckets is important. Some configurations to cons
 5. Metrics.
 
 **Encryption**
+The option encrypts the S3 bucket and all objects inside the bucket. It is a good practice to enable this when creating the bucket to ensure all current and future objects are encrypted.
 
 [Related AWS Doc.](https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-encryption-faq.html)
 
@@ -274,6 +275,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
 <cite>-- Terraform Docs.</cite>
 
 **Public access block**
+AWS recommends blocking public access of S3 objects, especially when dealing with sensitive data. It also recommends setting all 4 options to true (see below). 
 
 [Related AWS Doc.](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.htmls)
 
@@ -294,6 +296,7 @@ resource "aws_s3_bucket_public_access_block" "example" {
 <cite>-- Terraform Docs.</cite>
 
 **Logging**
+Allows logging of all access requests to the S3 bucket. The logs are stored in a separate S3 bucket, with appropriate permissions.
 
 [Related AWS Doc.](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html)
 
@@ -326,6 +329,7 @@ resource "aws_s3_bucket_logging" "example" {
 <cite>-- Terraform Docs.</cite>
 
 **Notifications**
+AWS SNS can be enabled for an S3 bucket to be notified when specified events occur. 
 
 [Related AWS Doc.](https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html)
 
@@ -371,6 +375,7 @@ resource "aws_s3_bucket_logging" "example" {
 <cite>-- Terraform Docs.</cite>
 
 **Metrics**
+Monitors and records overall metrics related to the S3 bucket. Can be customized to monitor the entire bucket or can be set to specific filters.
 
 [Related AWS Doc.](https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-configurations.html)
 
@@ -407,7 +412,44 @@ resource "aws_s3_bucket_logging" "example" {
 <cite>-- Terraform Docs.</cite>
 
 ### Cost
-#### Multi-region data
+It is important to keep an eye on costs, especially when handling Terabytes or Petabytes of data in your Data Lake. The first step to manage costs is to monitor it. One of the many ways to monitor costs in AWS is the [AWS Cost Explorer](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html) service. Please note that there is a nominal cost to make API calls to the CE service.
+
+Terraform allows defining some options to define Cost Explorer resources:
+
+```terraform
+resource "aws_ce_anomaly_monitor" "service_monitor" {
+  name              = "AWSServiceMonitor"
+  monitor_type      = "DIMENSIONAL"
+  monitor_dimension = "SERVICE"
+}
+```
+<cite>-- Terraform Docs.</cite>
+
+Another alternative to view your spending is the comprehensive AWS [Cost and Usage report](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html). This service allows sending data in CSV format to an S3 bucket from which you can visualize the cost data via one of the available [AWS reporting services](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html#download-cur).
+
+Defining a Cost and Usage report resource via Terraform:
+
+```terraform
+resource "aws_cur_report_definition" "example_cur_report_definition" {
+  report_name                = "example-cur-report-definition"
+  time_unit                  = "HOURLY"
+  format                     = "textORcsv"
+  compression                = "GZIP"
+  additional_schema_elements = ["RESOURCES", "SPLIT_COST_ALLOCATION_DATA"]
+  s3_bucket                  = "example-bucket-name"
+  s3_region                  = "us-east-1"
+  additional_artifacts       = ["REDSHIFT", "QUICKSIGHT"]
+}
+```
+<cite>-- Terraform Docs.</cite>
+
+Another way to reduce data transfer and networking costs is to keep the data closer to its source when building the data lake. 
+
+Some options:
+- Storing the data in an AWS S3 bucket belonging to the same region as the data sources.
+- Analyzing data in the same region and then sending only relevant data (such as as summaries or reports etc.) across different AWS regions. 
+
+Each service in AWS has its own pricing, so it important to note them and use them accordingly. 
 
 ## Redshift
 ### Analytics
