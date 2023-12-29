@@ -57,13 +57,6 @@ It is cost effective and performant to build a Data Lake when the data volume is
 
 As we saw above, a Data Lake is a centralized repository which stores all of the structured and unstructured data. This means that this data is available to anyone in an organization (with the relevant permissions). This could be - Data Analysts, Data Scientists, Data Engineers, Business Analysts, Product Managers, Finance or any other function. This offers a single source of truth of the data and each sub-function or department within an organization can choose to use the data as they see fit, with their own tooling for data access, analytics and visualization.
 
-
-# Architecture
-First, we will try to see the different pieces of a typical big data flow. Then, we can explore the different options available in AWS to accommodate those pieces. This will help us arrive at our actual architecture diagram which will more closely represent our actual implementation.
-
-`TODO: Data Flow Diagram`
-
-
 # Data sources
 Typically, data sources come from within AWS itself. In rare exceptions, the data comes from outside the cloud, or from another cloud provider. We will discuss both scenarios.
 
@@ -73,6 +66,12 @@ Typically, data sources come from within AWS itself. In rare exceptions, the dat
 [Reading for this section: AWS Organizations and AWS Accounts](#pre-requisite-reading)
 
 Sometimes, the S3 bucket containing the data of interest may not reside in the same AWS account from which we are reading it. To begin reading data from such external AWS accounts, the required permissions need to be in place. [Reference article.](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-walkthroughs-managing-access-example4.html)
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/cross-account-s3.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
 
 1. Role in destination account.
 2. Role in source/data source account.
@@ -457,6 +456,13 @@ There are many ways to transfer large volumes of data between two S3 buckets. AW
 Additionally, one other option is to setup downstream trigger jobs to run when a new event occurs in the AWS S3 bucket. We previously discussed setting up [notifications](#security) for events in AWS S3 buckets. The same setup can be used here. Once the SNS is setup, the destination AWS account can listen to these notifications via the AWS Simple Queue Service (SQS). The implementation is discussed [here](https://docs.aws.amazon.com/sns/latest/dg/sns-send-message-to-sqs-cross-account.html). Once the message is received from the Queue, you can write your own [application](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/examples-sqs-messages.html#sqs-messages-receive) to ingest the data and write it to a destination of your choice, which could be another AWS S3 bucket or a Delta table etc.
 
 ## AWS Kinesis
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/kinesis-stream.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
 One of the most popular ways of sending and receiving large volumes of data is AWS Kinesis, via streaming. This is one of the most comprehensive [whitepapers](https://d0.awsstatic.com/whitepapers/whitepaper-streaming-data-solutions-on-aws-with-amazon-kinesis.pdf) explaining different Kinesis use cases as well as tooling/services to consume/sink data from Kinesis.
 
 Since the whitepaper explains everything in detail, I will not elaborate on different options available with Kinesis.
@@ -501,7 +507,7 @@ Again, this depends on the latency you can afford with respect to the data arriv
 
 If you want near-realtime latency, again, a streaming pipeline is required. 
 
-Some design considerations:
+**Some design considerations:**
 - How much latency is tolerable?
 - What is your current and projected data volume? (What will be the volume in 6 months, 1 year, 5 years etc.?)
 - How are you handling error records? Are they required to be reprocessed?
@@ -519,18 +525,33 @@ It is very important for any data pipeline to maintain proper monitoring and ale
 AWS also has a robust [Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/cloudwatch/aws/latest) to create and manage Cloudwatch resources. [Example metric filter and alarm.](https://github.com/terraform-aws-modules/terraform-aws-cloudwatch/tree/master/examples/complete-log-metric-filter-and-alarm)
 
 # Analytics
-## Cataloging, accuracy and governance
+So far, we have discussed data sources, ingestion, ETL and related topics. Now, we will discuss analytics on a data lake built on AWS.
 
-## Tooling
-### Redshift
-**Usage**
-**Performance and scaling**
-### Quicksight
-### Sagemaker
-### Tableau
+**Design considerations:**
+- What is the primary use case of analytics? Examples: downstream data transformation (ETL), data enrichment to suit certain use cases, data visualization, ML, SQL/queries powering other downstream storage or dashboards etc.
+- Metadata management, data catalogs.
+- Governance - accuracy of data, profiling, completeness.
+- Notifications - data delays, gaps, other anomalies.
 
-# Reference Architecture Diagram
+AWS contains a [plethora of services](https://aws.amazon.com/big-data/datalakes-and-analytics/) catering to all of the above analytics use cases and design choices. 
 
-`TODO: Architecture Diagram`
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/s3-analytics.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
+
+Some examples:
+- **Athena** allows you to directly query S3 buckets using SQL.
+- **Redshift** allows you to maintain structured data for datawarehousing and combines both storage and compute.
+- **Quicksight** offers visualization. **Tableau** can be integrated with AWS and can be used for visualization use cases as well.
+- **DataZone** for governance.
+- **Glue** - serverless ETL, data catalog, interactive Python, PySpark notebooks, Cloudwatch integration, Data Quality, data cleansing.
 
 # Conclusion
+This article was an attempt to provide a reference to various AWS services to design and build a scalable, performant and cost-efficient data lake.
+
+These services keep getting updated with newer features from time to time, so the latest AWS documentation will give more information related to them.
+
+Each data lake effort has a variety of parameters such as available time, people in a team/organization, skills of the team, short term and long term goals for the project, users of the data lake, maintenance effort, operations and so on. It is important to keep these in mind while deciding on design, architecture and implementation.
