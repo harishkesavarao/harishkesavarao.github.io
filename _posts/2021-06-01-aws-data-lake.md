@@ -541,3 +541,8 @@ Some examples:
 `TODO: Architecture Diagram`
 
 # Conclusion
+This article was an attempt to provide a reference to various AWS services to design and build a scalable, performant and cost-efficient data lake.
+
+These services keep getting updated with newer features from time to time, so the latest AWS documentation will give more information related to them.
+
+Each data lake effort has a variety of parameters such as available time, people in a team/organization, skills of the team, short term and long term goals for the project, users of the data lake, maintenance effort, operations and so on. It is important to keep these in mind while deciding on design, architecture and implementation.
