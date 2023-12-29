@@ -501,7 +501,7 @@ Again, this depends on the latency you can afford with respect to the data arriv
 
 If you want near-realtime latency, again, a streaming pipeline is required. 
 
-Some design considerations:
+**Some design considerations:**
 - How much latency is tolerable?
 - What is your current and projected data volume? (What will be the volume in 6 months, 1 year, 5 years etc.?)
 - How are you handling error records? Are they required to be reprocessed?
@@ -519,15 +519,22 @@ It is very important for any data pipeline to maintain proper monitoring and ale
 AWS also has a robust [Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/cloudwatch/aws/latest) to create and manage Cloudwatch resources. [Example metric filter and alarm.](https://github.com/terraform-aws-modules/terraform-aws-cloudwatch/tree/master/examples/complete-log-metric-filter-and-alarm)
 
 # Analytics
-## Cataloging, accuracy and governance
+So far, we have discussed data sources, ingestion, ETL and related topics. Now, we will discuss analytics on a data lake built on AWS.
 
-## Tooling
-### Redshift
-**Usage**
-**Performance and scaling**
-### Quicksight
-### Sagemaker
-### Tableau
+**Design considerations:**
+- What is the primary use case of analytics? Examples: downstream data transformation (ETL), data enrichment to suit certain use cases, data visualization, ML, SQL/queries powering other downstream storage or dashboards etc.
+- Metadata management, data catalogs.
+- Governance - accuracy of data, profiling, completeness.
+- Notifications - data delays, gaps, other anomalies.
+
+AWS contains a [plethora of services](https://aws.amazon.com/big-data/datalakes-and-analytics/) catering to all of the above analytics use cases and design choices. 
+
+Some examples:
+- **Athena** allows you to directly query S3 buckets using SQL.
+- **Redshift** allows you to maintain structured data for datawarehousing and combines both storage and compute.
+- **Quicksight** offers visualization. **Tableau** can be integrated with AWS and can be used for visualization use cases as well.
+- **DataZone** for governance.
+- **Glue** - serverless ETL, data catalog, interactive Python, PySpark notebooks, Cloudwatch integration, Data Quality, data cleansing.
 
 # Reference Architecture Diagram
 
