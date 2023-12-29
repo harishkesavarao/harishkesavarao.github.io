@@ -461,38 +461,62 @@ One of the most popular ways of sending and receiving large volumes of data is A
 
 Since the whitepaper explains everything in detail, I will not elaborate on different options available with Kinesis.
 
-## External data sources
-### From an on-premise source 
-### From another cloud provider
-### Others
-Flat files
-Spreadsheets
-SaaS systems/APIs 
+# Design decisions, trade-offs
+We have discussed data sources at length. Now, we will talk about other areas of building the data lake, such as compute, alerting and analytics.
 
-# Design decisions, trade-offs 
 ## Compute
-### EC2
-### EMR
-### SageMaker
+When it comes to compute, there are a few design considerations:
+
+- Do you have enough compute when your workloads need them? 
+- Is compute being utilized effectively or are you paying for compute when there isn't utilization?
+- Are you able to customize scaling up or down based on your workload? Is scaling causing additional overhead?
+- Are there custom compute types available for different workloads - streaming, batch or maintenance jobs?
+- Can you reserve compute ahead of time to reduce costs?
+
+If the compute is [serverless](https://aws.amazon.com/serverless/), it gives you scalability, but it comes at a cost because there is typically less flexibility in controlling the compute types and asscociated costs compared to instance based compute types. 
+
+Going with instance based compute allows more granularity with costs, but it adds overhead with maintenance of instances, although services like AWS EMR do scale your instances based on usage in recent versions, offering a good middle ground. Smaller workloads can be run on serverless options such as AWS Lambda.
+
+Based on all of these considerations, you can choose whichever [AWS compute works](https://aws.amazon.com/products/compute/) for your use case.
 
 ## Storage
 ### S3
+The most common storage mechanism in AWS is in S3, which works quite well for a data lake destination storage.
+
+Some considerations for optimized storage:
+- **Partitioning:** Partition all data written to S3 buckets based on at least one partition - such as date, and possibly more, based on the data. This also facilitates efficient consumption/querying of data and for other downstream jobs to read the data from the data lake.
+- **File format:** [Many file formats](https://spark.apache.org/docs/latest/sql-data-sources.html) are available and supported by Spark (more on this in the [ETL](#etl) section), of which, [parquet](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) seems to have a good trade-off in terms of write-throughput, compression, read-throughput. It also offers additional features such as partition discovery and schema merging/evolution, which are important for a data lake use case.
+- **Compression:** It is important to compress files to avoid additonal costs and when storing data in S3. Parquet supports snappy, gzip, lzo, brotli, lz4, zstd types and I have found snappy to be efficient in terms of storage and retrieval.
+- **Retention:** Storing only the data you require and moving other data to less expensive storage or marking them for deletion. Please see the [storage lifecycle](#storage-lifecycle-and-other-related-items) section.
 
 # ETL
-## Security and permissions
+There are several ETL options (both [open source](https://projects.apache.org/projects.html?category#big-data) and otherwise) when it comes to building pipelines for a data lake. 
+
+This largely depends on the use case. You can build a simple Python pipeline, or use an off-the-shelf ETL product or use one of the big data projects.
+
+When the data volume is large, the choice for a typical data lake is Apache Spark or Apache Flink. 
 
 ## Batch vs. Streaming
+Again, this depends on the latency you can afford with respect to the data arriving to the data lake. If a latency is tolerable and can consume all of the data between a certain time interval, batch workflows are fine. If the data volume is large or is expected to grow over time, a streaming workflow is desirable. 
 
-# Costs and Scaling up/down
-## Compute
-## Storage
-## In-flight data
+If you want near-realtime latency, again, a streaming pipeline is required. 
 
-# Alerting and Monitoring
-## Cloudwatch
-## Eventbridge
+Some design considerations:
+- How much latency is tolerable?
+- What is your current and projected data volume? (What will be the volume in 6 months, 1 year, 5 years etc.?)
+- How are you handling error records? Are they required to be reprocessed?
+- How fault tolerant is your pipeline? How will the pipeline start if there is a failure? (Consume all available data again or maintain destination checkpoints). Is a restart automatic? How many times do you retry? Are there notifications about failures?
+- Are you accounting for permanent data loss if you are reading from a streaming services like Kinesis? (What happens if your pipeline is not restarted beyond the retention timeline of the streaming service?)
+- Are you handling de-duplication automatically?
+- Are you implementing monitoring and alerting?
+- Are you balancing costs vs. accuracy of the data? 
 
-## Performance Tuning
+# Monitoring and Alerting
+It is very important for any data pipeline to maintain proper monitoring and alerting. This allows timely intervention when there are problems with the pipelines. It also allows us to preempt what could become a larger problem later on.
+
+[AWS Cloudwatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html) is amongst the best options available for monitoring services in AWS because it allows sending logs from any service and also allows different log storage and notification mechanisms.
+
+AWS also has a robust [Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/cloudwatch/aws/latest) to create and manage Cloudwatch resources. [Example metric filter and alarm.](https://github.com/terraform-aws-modules/terraform-aws-cloudwatch/tree/master/examples/complete-log-metric-filter-and-alarm)
 
 # Analytics
 ## Cataloging, accuracy and governance
@@ -508,10 +532,5 @@ SaaS systems/APIs
 # Reference Architecture Diagram
 
 `TODO: Architecture Diagram`
-
-## DevOps
-### Terraform
-### AWS CDK
-### Code/Application
 
 # Conclusion
