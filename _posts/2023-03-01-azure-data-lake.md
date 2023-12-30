@@ -14,6 +14,11 @@ toc:
 ## Pre-requisite reading
 In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the AWS services I have listed below, you can skip this section.
 
+- [Storage account overview.](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview)
+- [IaC on Azure.](https://learn.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code)
+
+- [Azure Resource Manager.](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview)
+
 ## Infrastructure as Code (IaC)
 All of the Azure cloud resources discussed can be created manually via the Azure Portal.
 
@@ -33,20 +38,56 @@ As we saw above, a Data Lake is a centralized repository which stores all of the
 
 
 # Data sources
+From what I have seen, most data sources in Azure fall under one of two types: Azure Storage Account and Eventhubs (streaming). We will discuss the following topics for these two data sources:
+
+- How are we authenticating to these sources before ingesting data from them?
+- What are the most efficient methods to ingest data from the two source types?
+
+We will not discuss the destination storage in this section. We will do it in the design decisions section.
+
 ## Azure Storage Account
-## Synapse
+There are many types of storage accounts. For the purpose of this article, we will discuss Standard general-purpose v2, which supports the Azure Blob Storage (and Data Lake Storage) service. 
+
+### Authorization
+Options to authenticate to a storage account in Azure. 
+
+**[Shared Key](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal)**: a shared key is passed with every request to the storage account.
+
+**[SAS (Shared Access Signature)](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview)**: provides delegated access to storage account resources. The URL specifies the permission level. 
+
+### Ingestion
+
+**Data Migration**
+
+**Event handling**
+https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview
+
+**Event Queue for Storage Account:**
+
 ## Eventhubs
 
-# Permissions
+### Authorization
 
-# Destination
+### Ingestion
 
 # Design decisions and trade-offs
 ## Compute
-## Storage
+## Storage / Azure Storage Account
+
+**Security**
+
+**Data Protection**
+
+**Access tiers, lifecycle management**
+
+**Performance, scalability**
+
+**Cost planning, optimization**
+
 ## Analytics
 ## Security
 ## Costs and Scaling up/down
 ## Alerting and Monitoring
+
 
 # Conclusion
