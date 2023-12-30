@@ -38,22 +38,31 @@ As we saw above, a Data Lake is a centralized repository which stores all of the
 
 
 # Data sources
+From what I have seen, most data sources in Azure fall under one of two types: Azure Storage Account and Eventhubs (streaming). We will discuss the following topics for these two data sources:
+
+- How are we authenticating to these sources before ingesting data from them?
+- What are the most efficient methods to ingest data from the two source types?
+
+We will not discuss the destination storage in this section. We will do it in the design decisions section.
+
 ## Azure Storage Account
 There are many types of storage accounts. For the purpose of this article, we will discuss Standard general-purpose v2, which supports the Azure Blob Storage (and Data Lake Storage) service. 
 
 ### Authorization
+Options to authenticate to a storage account in Azure. 
+
+**[Shared Key](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal)**: a shared key is passed with every request to the storage account.
+
+**[SAS (Shared Access Signature)](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview)**: provides delegated access to storage account resources. The URL specifies the permission level. 
 
 ### Ingestion
 
 **Data Migration**
+
 **Event handling**
 https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview
 
-## Synapse
-
-### Authorization
-
-### Ingestion
+**Event Queue for Storage Account:**
 
 ## Eventhubs
 
@@ -66,14 +75,19 @@ https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overvie
 ## Storage / Azure Storage Account
 
 **Security**
+
 **Data Protection**
+
 **Access tiers, lifecycle management**
+
 **Performance, scalability**
+
 **Cost planning, optimization**
 
 ## Analytics
 ## Security
 ## Costs and Scaling up/down
 ## Alerting and Monitoring
+
 
 # Conclusion
