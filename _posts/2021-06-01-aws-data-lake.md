@@ -33,7 +33,7 @@ In order to fully understand or follow along with the article, I recommend readi
 - [Cost management in AWS](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/aws-cost-management.html).
 - [AWS Databases](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html).
 
-### Infrastructure as Code
+### Infrastructure as Code (IaC)
 All of the AWS resources discussed can be created manually via the AWS Management Console. 
 
 In a production deployment, that is seldom the case. We typically use an [Infrastructure as Code](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/infrastructure-as-code) deployment to manage resources. There are a few IaC options, Terraform and AWS CDK being the most popular. 
@@ -58,8 +58,6 @@ It is cost effective and performant to build a Data Lake when the data volume is
 As we saw above, a Data Lake is a centralized repository which stores all of the structured and unstructured data. This means that this data is available to anyone in an organization (with the relevant permissions). This could be - Data Analysts, Data Scientists, Data Engineers, Business Analysts, Product Managers, Finance or any other function. This offers a single source of truth of the data and each sub-function or department within an organization can choose to use the data as they see fit, with their own tooling for data access, analytics and visualization.
 
 # Data sources
-Typically, data sources come from within AWS itself. In rare exceptions, the data comes from outside the cloud, or from another cloud provider. We will discuss both scenarios.
-
 ## AWS S3
 [AWS S3 (Simple Storage Service)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) is one of the most common use cases of consuming data in AWS. You can read about the basics (buckets, etc.) of S3 from the documentation link.
 ### Cross-account storage
