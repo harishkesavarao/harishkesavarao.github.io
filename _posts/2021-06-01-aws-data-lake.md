@@ -14,24 +14,24 @@ toc:
 ## Pre-requisite reading
 In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the AWS services I have listed below, you can skip this section.
 
-- [AWS Cloud essentials](https://aws.amazon.com/getting-started/cloud-essentials/).
-- [AWS Services by category](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/amazon-web-services-cloud-platform.html?pg=cloudessentials).
-- [AWS Organizations](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html).
-- [AWS Accounts](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts.html).
-- [AWS Management Cons-- AWS documentation//docs.aws.amazon.com/whitepapers/latest/aws-overview/compute-services.html).
-- [AWS Storage](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/storage-services.html).
-- [AWS Analytics](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/analytics.html).
-- [AWS Containers](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/containers.html).
-- [AWS Application Integration](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/application-integration.html).
-- [AWS IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html).
+- [AWS Cloud essentials.](https://aws.amazon.com/getting-started/cloud-essentials/)
+- [AWS Services by category.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/amazon-web-services-cloud-platform.html?pg=cloudessentials)
+- [AWS Organizations.](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html)
+- [AWS Accounts.](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts.html)
+- [AWS Compute.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/compute-services.html)
+- [AWS Storage.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/storage-services.html)
+- [AWS Analytics.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/analytics.html)
+- [AWS Containers.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/containers.html)
+- [AWS Application Integration.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/application-integration.html)
+- [AWS IAM.](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)
 - [What is a Data Lake?](https://aws.amazon.com/what-is/data-lake/)
 
 ### Advanced reading
-- [AWS Networking Services](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/networking-services.html).
-- [AWS Management and Governance](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/management-governance.html).
-- [AWS Developer Tools](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/developer-tools.html).
-- [Cost management in AWS](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/aws-cost-management.html).
-- [AWS Databases](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html).
+- [AWS Networking Services.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/networking-services.html)
+- [AWS Management and Governance.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/management-governance.html)
+- [AWS Developer Tools.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/developer-tools.html)
+- [Cost management in AWS.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/aws-cost-management.html)
+- [AWS Databases.](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html)
 
 ### Infrastructure as Code (IaC)
 All of the AWS resources discussed can be created manually via the AWS Management Console. 
@@ -191,8 +191,51 @@ resource "aws_iam_role_policy_attachment" "test-attach" {
 ```
 <cite>-- Terraform Docs.</cite>
 
+### Data ingestion between source and destination AWS S3 buckets
+There are many ways to transfer large volumes of data between two S3 buckets. AWS describes them very well [here](https://repost.aws/knowledge-center/s3-large-transfer-between-buckets). 
 
-### Storage lifecycle and other related items
+Additionally, one other option is to setup downstream trigger jobs to run when a new event occurs in the AWS S3 bucket. We previously discussed setting up [notifications](#security) for events in AWS S3 buckets. The same setup can be used here. Once the SNS is setup, the destination AWS account can listen to these notifications via the AWS Simple Queue Service (SQS). The implementation is discussed [here](https://docs.aws.amazon.com/sns/latest/dg/sns-send-message-to-sqs-cross-account.html). Once the message is received from the Queue, you can write your own [application](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/examples-sqs-messages.html#sqs-messages-receive) to ingest the data and write it to a destination of your choice, which could be another AWS S3 bucket or a Delta table etc.
+
+## AWS Kinesis
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/kinesis-stream.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
+One of the most popular ways of sending and receiving large volumes of data is AWS Kinesis, via streaming. This is one of the most comprehensive [whitepapers](https://d0.awsstatic.com/whitepapers/whitepaper-streaming-data-solutions-on-aws-with-amazon-kinesis.pdf) explaining different Kinesis use cases as well as tooling/services to consume/sink data from Kinesis.
+
+Since the whitepaper explains everything in detail, I will not elaborate on different options available with Kinesis.
+
+# Design decisions, trade-offs
+We have discussed data sources at length. Now, we will talk about other areas of building the data lake, such as compute, alerting and analytics.
+
+## Compute
+When it comes to compute, there are a few design considerations:
+
+- Do you have enough compute when your workloads need them? 
+- Is compute being utilized effectively or are you paying for compute when there isn't utilization?
+- Are you able to customize scaling up or down based on your workload? Is scaling causing additional overhead?
+- Are there custom compute types available for different workloads - streaming, batch or maintenance jobs?
+- Can you reserve compute ahead of time to reduce costs?
+
+If the compute is [serverless](https://aws.amazon.com/serverless/), it gives you scalability, but it comes at a cost because there is typically less flexibility in controlling the compute types and asscociated costs compared to instance based compute types. 
+
+Going with instance based compute allows more granularity with costs, but it adds overhead with maintenance of instances, although services like AWS EMR do scale your instances based on usage in recent versions, offering a good middle ground. Smaller workloads can be run on serverless options such as AWS Lambda.
+
+Based on all of these considerations, you can choose whichever [AWS compute works](https://aws.amazon.com/products/compute/) for your use case.
+
+## Storage
+### S3
+The most common storage mechanism in AWS is in S3, which works quite well for a data lake destination storage.
+
+Some considerations for optimized storage:
+- **Partitioning:** Partition all data written to S3 buckets based on at least one partition - such as date, and possibly more, based on the data. This also facilitates efficient consumption/querying of data and for other downstream jobs to read the data from the data lake.
+- **File format:** [Many file formats](https://spark.apache.org/docs/latest/sql-data-sources.html) are available and supported by Spark (more on this in the [ETL](#etl) section), of which, [parquet](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) seems to have a good trade-off in terms of write-throughput, compression, read-throughput. It also offers additional features such as partition discovery and schema merging/evolution, which are important for a data lake use case.
+- **Compression:** It is important to compress files to avoid additonal costs and when storing data in S3. Parquet supports snappy, gzip, lzo, brotli, lz4, zstd types and I have found snappy to be efficient in terms of storage and retrieval.
+
+### Lifecycle management
 You might want to consider maintenance of the objects in the S3 bucket, since the data might grow over time. This results in larger partition counts to maintain in addition to growing costs. So, it is a good practice to define a lifecycle configuration for the S3 objects. 
 
 > An S3 Lifecycle configuration is an XML file that consists of a set of rules with predefined actions that you want Amazon S3 to perform on objects during their lifetime.
@@ -408,7 +451,7 @@ Monitors and records overall metrics related to the S3 bucket. Can be customized
 ```
 <cite>-- Terraform Docs.</cite>
 
-### Cost
+### Cost planning and optimization
 It is important to keep an eye on costs, especially when handling Terabytes or Petabytes of data in your Data Lake. The first step to manage costs is to monitor it. One of the many ways to monitor costs in AWS is the [AWS Cost Explorer](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html) service. Please note that there is a nominal cost to make API calls to the CE service.
 
 Terraform allows defining some options to define Cost Explorer resources:
@@ -447,51 +490,6 @@ Some options:
 - Analyzing data in the same region and then sending only relevant data (such as as summaries or reports etc.) across different AWS regions. 
 
 Each service in AWS has its own pricing, so it important to note them and use them accordingly. 
-
-### Data ingestion between source and destination AWS S3 buckets
-There are many ways to transfer large volumes of data between two S3 buckets. AWS describes them very well [here](https://repost.aws/knowledge-center/s3-large-transfer-between-buckets). 
-
-Additionally, one other option is to setup downstream trigger jobs to run when a new event occurs in the AWS S3 bucket. We previously discussed setting up [notifications](#security) for events in AWS S3 buckets. The same setup can be used here. Once the SNS is setup, the destination AWS account can listen to these notifications via the AWS Simple Queue Service (SQS). The implementation is discussed [here](https://docs.aws.amazon.com/sns/latest/dg/sns-send-message-to-sqs-cross-account.html). Once the message is received from the Queue, you can write your own [application](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/examples-sqs-messages.html#sqs-messages-receive) to ingest the data and write it to a destination of your choice, which could be another AWS S3 bucket or a Delta table etc.
-
-## AWS Kinesis
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/kinesis-stream.png" class="img-fluid rounded z-depth-1" zoomable=true %}
-    </div>
-</div>
-
-One of the most popular ways of sending and receiving large volumes of data is AWS Kinesis, via streaming. This is one of the most comprehensive [whitepapers](https://d0.awsstatic.com/whitepapers/whitepaper-streaming-data-solutions-on-aws-with-amazon-kinesis.pdf) explaining different Kinesis use cases as well as tooling/services to consume/sink data from Kinesis.
-
-Since the whitepaper explains everything in detail, I will not elaborate on different options available with Kinesis.
-
-# Design decisions, trade-offs
-We have discussed data sources at length. Now, we will talk about other areas of building the data lake, such as compute, alerting and analytics.
-
-## Compute
-When it comes to compute, there are a few design considerations:
-
-- Do you have enough compute when your workloads need them? 
-- Is compute being utilized effectively or are you paying for compute when there isn't utilization?
-- Are you able to customize scaling up or down based on your workload? Is scaling causing additional overhead?
-- Are there custom compute types available for different workloads - streaming, batch or maintenance jobs?
-- Can you reserve compute ahead of time to reduce costs?
-
-If the compute is [serverless](https://aws.amazon.com/serverless/), it gives you scalability, but it comes at a cost because there is typically less flexibility in controlling the compute types and asscociated costs compared to instance based compute types. 
-
-Going with instance based compute allows more granularity with costs, but it adds overhead with maintenance of instances, although services like AWS EMR do scale your instances based on usage in recent versions, offering a good middle ground. Smaller workloads can be run on serverless options such as AWS Lambda.
-
-Based on all of these considerations, you can choose whichever [AWS compute works](https://aws.amazon.com/products/compute/) for your use case.
-
-## Storage
-### S3
-The most common storage mechanism in AWS is in S3, which works quite well for a data lake destination storage.
-
-Some considerations for optimized storage:
-- **Partitioning:** Partition all data written to S3 buckets based on at least one partition - such as date, and possibly more, based on the data. This also facilitates efficient consumption/querying of data and for other downstream jobs to read the data from the data lake.
-- **File format:** [Many file formats](https://spark.apache.org/docs/latest/sql-data-sources.html) are available and supported by Spark (more on this in the [ETL](#etl) section), of which, [parquet](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) seems to have a good trade-off in terms of write-throughput, compression, read-throughput. It also offers additional features such as partition discovery and schema merging/evolution, which are important for a data lake use case.
-- **Compression:** It is important to compress files to avoid additonal costs and when storing data in S3. Parquet supports snappy, gzip, lzo, brotli, lz4, zstd types and I have found snappy to be efficient in terms of storage and retrieval.
-- **Retention:** Storing only the data you require and moving other data to less expensive storage or marking them for deletion. Please see the [storage lifecycle](#storage-lifecycle-and-other-related-items) section.
 
 # ETL
 There are several ETL options (both [open source](https://projects.apache.org/projects.html?category#big-data) and otherwise) when it comes to building pipelines for a data lake. 
