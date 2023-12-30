@@ -14,7 +14,6 @@ toc:
 ## Pre-requisite reading
 In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the AWS services I have listed below, you can skip this section.
 
-
 ## Infrastructure as Code (IaC)
 All of the Azure cloud resources discussed can be created manually via the Azure Portal.
 
