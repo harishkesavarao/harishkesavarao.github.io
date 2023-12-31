@@ -24,6 +24,8 @@ In order to fully understand or follow along with the article, I recommend readi
 
 - [Azure role-based access control (RBAC).](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-steps)
 
+- [Azure Event Hubs.](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about)
+
 ## Infrastructure as Code (IaC)
 All of the Azure cloud resources discussed can be created manually via the Azure Portal.
 
@@ -56,7 +58,7 @@ We will not discuss the destination storage in this section. We will do it in th
 
 There are many types of storage accounts. For the purpose of this article, we will discuss Standard general-purpose v2, which supports the Azure Blob Storage (and Data Lake Storage) service. 
 
-### Authorization
+### Authentication and authorization
 Options to authenticate to a storage account in Azure. 
 
 You can always define the following authentication keys using the Azure Portal, Azure CLI or other manual/UI means. For a production system, it is important to think of automated deployment of resources using IaC and via [CI/CD.](https://en.wikipedia.org/wiki/CI/CD) In this context, Azure recommends using what is called as an Application and an associated Service Principal. 
@@ -84,22 +86,59 @@ If you choose to use the shared key to access a Storage Account, an associated [
 >
 > <cite>-- Microsoft Azure Documentation.</cite>
 
-### Ingestion
+More information on creating a SAS token [here](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli). The article explains using a security principal (an user, group or a Service Principal) to first assign the `Microsoft.Storage/storageAccounts/blobServices/generateUserDelegationKey` action to the security principal or via an RBAC such as `Storage Blob Data Contributor` and then use the permissions to then create an user delegated SAS using it.
 
-**Data Migration**
+## Azure Event Hubs
+[Related Azure doc.](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about)
+
+> Azure Event Hubs is a cloud native data streaming service that can stream millions of events per second, with low latency, from any source to any destination. Event Hubs is compatible with Apache Kafka, and it enables you to run existing Kafka workloads without any code changes.
+>
+> <cite>-- Microsoft Azure Documentation.</cite>
+
+Eventhubs allows ingesting streaming data to a data lake. We will confine our discussion to receiving data, setting up authorization and a few other basics in this section. Ingestion data will be discussed in the Ingestion section for Event Hubs. 
+
+### Authentication and authorization
+The authorization mechanism for event hubs is similar to the SAS token we discussed for Azure Storage Account, with the only difference being, we can define authorization policies associated with each event hubs topic (you can define a SAS token for an eventhubs namespace or as well, but I prefer to do it a event hubs topic level to keep it more granular). The policy defines the level of access for the SAS token.
+
+[Authentication](https://learn.microsoft.com/en-us/azure/event-hubs/authenticate-shared-access-signature) and [authorization](https://learn.microsoft.com/en-us/azure/event-hubs/authorize-access-shared-access-signature) using a shared access signature. 
+
+You can generate SAS authorization policies and tokens using the Security Principal method described above in the Storage Account's Authorization section.
+
+# Ingestion
+So far, we have discussed data sources and associated authorization mechanisms. Now, we will discuss methods to ingest data from the different data sources using the configured authorization. A few design questions related to ingestion:
+
+- How frequently do you need to ingest - batch, streaming?
+- What is your expected throughput when ingesting data? Can you data lake tolerate some delay at the benefit of reduced cost?
+- Do you need to deploy infrastructure related to ingestion? What kinds of resources? Are specific authorization mechanisms needed for these?
+
+## Azure Storage Account
+
+**Data Migration** 
+
+When it comes to ingesting data into a Data Lake, the first level of ingestion usually involves the copying of raw data. In other words, data is ingestd as-is from the source and no data transformations take place. This simplifies things for the first-level ingestion, where you do not have to build an ETL pipeline to copy/move data.
+
+The Azure CLI `az storage blob copy` [command](https://learn.microsoft.com/en-us/cli/azure/storage/blob/copy?view=azure-cli-latest) is helpful in performing such batch copy operations from the source Azure Storage Account to the destination (Data Lake) Azure Storage Account. The [authentication and authorization mechanisms](#authentication-and-authorization) we discussed during the Azure Storage Account data sources can be used when running the command.
 
 **Event handling**
-https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview
 
-**Event Queue for Storage Account:**
+Instead of scheduling a batch copy, we can ingest data using an event-driven mechanism. [Azure Storage Accounts can be configured to send certain (specified via a filter) events to Azure Event Grid](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview). Event Grid then delivers these events to applications listening to it.
 
-## Eventhubs
+[Read here](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#filtering-events) about filtering events to be sent to the Event Grid. [Some caveats](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#practices-for-consuming-events) to watch when using this option for ingestion. 
 
-### Authorization
+[Azure Queue Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#practices-for-consuming-events) is one of the applications which can be configured to listen to Azure Event Grid. Your client application can then read queue messages from Azure Queue Storage. A Python code sample is available [here](https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-python?tabs=passwordless%2Croles-azure-portal%2Cenvironment-variable-windows%2Csign-in-visual-studio-code). 
 
-### Ingestion
+
+## Azure Event Hubs
+
+**Azure Event Hubs for Kafka**
+
+
+**Event handling**
+
+https://learn.microsoft.com/en-us/azure/event-hubs/azure-event-hubs-kafka-overview
 
 # Design decisions and trade-offs
+
 ## Compute
 
 https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree
@@ -117,9 +156,7 @@ https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/co
 **Cost planning, optimization**
 
 ## Analytics
-## Security
 ## Costs and Scaling up/down
 ## Alerting and Monitoring
-
 
 # Conclusion
