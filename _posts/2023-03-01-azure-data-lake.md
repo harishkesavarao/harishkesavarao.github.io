@@ -355,6 +355,7 @@ Azure provides comprehensive documentation on different compute types. Based on 
 If you are storing sensitive data in your destination Azure Storage Account for the Data Lake, it is all the more important to setup [logging and monitoring](https://learn.microsoft.com/en-us/azure/storage/blobs/monitor-blob-storage?tabs=azure-portal) for the Storage Account. 
 
 **Access tiers, lifecycle management**
+
 [Reading for this section.](https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview)
 
 Azure Storage Management Policy.
