@@ -12,7 +12,7 @@ toc:
 
 # Introduction
 ## Pre-requisite reading
-In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the AWS services I have listed below, you can skip this section.
+In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the Azure services I have listed below, you can skip this section.
 
 1. [Storage account overview.](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview)
 2. [IaC on Azure.](https://learn.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code)
