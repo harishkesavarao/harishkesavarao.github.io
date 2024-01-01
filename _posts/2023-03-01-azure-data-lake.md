@@ -335,11 +335,25 @@ resource "azurerm_storage_queue" "example" {
 
 Usually, given larger volumes for a big data lake, we can configure [Spark Structured Streaming for Kafka](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-kafka-spark-tutorial#read-from-event-hubs-for-kafka) and consume events from Azure Event Hub. More information on configuring Kafka (bootstrap servers, security protocol, sasl mechanism, sasl jaas config etc.) and other settings [here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-kafka-enabled-event-hubs?tabs=connection-string#send-and-receive-messages-with-kafka-in-event-hubs).
 
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/eventhubs_kafka.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
+
 **Event handling**
 
 The same mechanism for event handling for Azure Storage Account applies to Event Hubs as well. And not just for Event Hubs, there are a [number of Azure services](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#the-event-model) which can send data to Azure Event Grid. 
 
 Once the [required permissions](#authentication-and-authorization-1) are configured for Event Hubs, the topic can send data to the Event Grid.
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.html path="assets/img/event_grid_queue_storage.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+    </div>
+</div>
+
 
 # Design decisions and trade-offs
 
