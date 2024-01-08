@@ -81,6 +81,10 @@ resource "azurerm_storage_account" "example" {
 ### Authentication and authorization
 Options to authenticate to a storage account in Azure. 
 
+**Azure AD/Entra ID and Azure RBAC**
+
+Azure Active Directory and Entra ID are the same.
+
 You can always define the following authentication keys using the Azure Portal, Azure CLI or other manual/UI means. For a production system, it is important to think of automated deployment of resources using IaC and via [CI/CD.](https://en.wikipedia.org/wiki/CI/CD) In this context, Azure recommends using what is called as an Application and an associated Service Principal. 
 
 _Excerpt from Azure Docs below:_
@@ -96,11 +100,11 @@ _Excerpt from Azure Docs below:_
 
 Setting up access to an Azure Storage Account via an Azure Service Principal is explained [here.](https://learn.microsoft.com/en-us/dynamics365/customer-insights/data/connect-service-principal)
 
-**[Shared Key (WARNING: has full access to the storage account config and data)](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal)**: a shared key is passed with every request to the storage account. The shared key is created along with each storage account and can be used for authorization. Since it contains full access to a storage account, it is discouraged to use this as a standard authorization option.
+**[Shared Key (WARNING: has full access to the storage account config and data)](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal)** a shared key is passed with every request to the storage account. The shared key is created along with each storage account and can be used for authorization. Since it contains full access to a storage account, it is discouraged to use this as a standard authorization option.
 
 If you choose to use the shared key to access a Storage Account, an associated [connection string](https://learn.microsoft.com/en-us/azure/storage/common/storage-configure-connection-string?toc=/azure/storage/blobs/toc.json&bc=/azure/storage/blobs/breadcrumb/toc.json) needs to be generated alongside the shared key. 
 
-**Delegated access with shared access signatures (SAS):**
+**Delegated access with shared access signatures (SAS)**
 > A shared access signature (SAS) enables you to grant limited access to containers and blobs in your storage account. When you create a SAS, you specify its constraints, including which Azure Storage resources a client is allowed to access, what permissions they have on those resources, and how long the SAS is valid.
 >
 >
@@ -268,6 +272,8 @@ The Azure CLI `az storage blob copy` [command](https://learn.microsoft.com/en-us
 **Event handling**
 
 Instead of scheduling a batch copy, we can ingest data using an event-driven mechanism. [Azure Storage Accounts can be configured to send certain (specified via a filter) events to Azure Event Grid](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview). Event Grid then delivers these events to applications listening to it.
+
+Authentication can be implemented via Azure AD/Entra ID + RBAC as described above or here, where an [Oauth token is requested at runtime](https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory#overview-of-microsoft-entra-id-for-blobs) to allow subscribing to events occurring from the Azure Storage Account.
 
 [Read here](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#filtering-events) about filtering events to be sent to the Event Grid. [Some caveats](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#practices-for-consuming-events) to watch when using this option for ingestion. 
 
