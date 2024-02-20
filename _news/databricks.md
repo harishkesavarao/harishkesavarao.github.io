@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Joined Databricks as Staff Software Engineer and Team Lead for Security Data Infrastructure.
+Joined Databricks as Staff Software Engineer and Data Engineering Team Lead for Security.
