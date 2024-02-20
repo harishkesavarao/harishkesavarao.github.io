@@ -8,7 +8,7 @@ middle_name:
 last_name: Kesava Rao
 email: harish.kesavarao@gmail.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  Posts about data engineering, data infrastructure and big data.
+  Posts about data engineering, surrounding infrastructure and big data.
 footer_text: >
 
 keywords: jekyll, jekyll-theme, academic-website, portfolio-website  # add your own keywords or leave empty
@@ -120,7 +120,7 @@ bing_site_verification:  # out your bing-site-verification ID (Bing Webmaster)
 
 blog_name: blog posts # blog_name will be displayed in your blog page
 blog_nav_title: blog # your blog must have a title for it to be displayed in the nav bar
-blog_description: Posts about data engineering, data infrastructure and big data.
+blog_description: Posts about data engineering, surrounding infrastructure and big data.
 permalink: /blog/:year/:title/
 
 # Pagination
