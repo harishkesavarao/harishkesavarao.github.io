@@ -33,9 +33,25 @@
 - title: Experience
   type: time_table
   contents:
+    - title: Principal Data Engineer
+      institution: Atlassian
+      year: 2024 - Present
+      description:
+        - Planning the short-term and long-term technology roadmap for Data Engineering projects. 
+        - Guiding Data Engineers and Lead Data Engineers on design, data architecture for mutliple streams.
+        - Resolving ambiguity and arriving at clear, actionable decisions; Help achieve trade-offs between velocity and quality.
+        - Providing constructive and clear feedback during code reviews and design reviews.
+        - Helping the team succeed in building robust, scalable, auditable pipelines to create a performant Data Lake on AWS (ECS, S3, Airflow), Airflow and Databricks.
+        - title: Key areas/skills.
+          contents:
+            - Databricks
+            - Delta lake storage
+            - AWS - S3, SQS, SNS, Kinesis
+            - Spark - Batch, performance tuning
+            - DBT, Jinja templates
     - title: Staff Software Engineer/Team Lead, Data Engineering
       institution: Databricks
-      year: 2022 - Present
+      year: 2022 - 2024
       description:
         - Managing multiple large-scale Data Engineering initiatives. Mentoring and advising Data Engineers.
         - Deploying data pipelines and associated resources on AWS, Azure via Terraform (HCL) on Databricks workspaces.
