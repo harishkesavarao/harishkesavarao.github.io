@@ -19,16 +19,19 @@ latest_posts: true  # includes a list of the newest posts
 social: true  # includes social icons at the bottom of the page
 ---
 
-**Data Engineering Team Lead** @ [Databricks](https://www.databricks.com/) \
-**Previously: Data Engineering** @ [Amazon](https://www.primevideotech.com/our-innovation), [Indeed](https://engineering.indeedblog.com/blog/2018/10/imhotep-scalable-efficient-and-fast/), [Informatica](https://www.informatica.com/)
+**Principal Data Engineer & Data Architect** @  [Atlassian](https://www.atlassian.com/blog/atlassian-engineering) \
+**Previously: Data Engineering** @ [Databricks](https://www.databricks.com/), [Amazon](https://www.primevideotech.com/our-innovation), [Indeed](https://engineering.indeedblog.com/blog/2018/10/imhotep-scalable-efficient-and-fast/), [Informatica](https://www.informatica.com/)
 
-Hello, I am a Staff Software Engineer and Data Engineering Team Lead for [Security](https://www.databricks.com/trust) at [Databricks](https://www.databricks.com/). I am currently involved in overseeing the execution of multi-quarter Data Engineering projects, including design, automation and scaling of multi-TB/day data in [AWS](https://www.databricks.com/product/aws) and [Azure](https://azure.microsoft.com/en-us/products/databricks).
+Hello, I am a Principal Data Engineer & Data Architect for the Data Engineering organization at Altassian. 
 
-Prior to moving to my current Tech Lead role, I was in Senior Data Engineering(Individual Contributor) roles at [Salesforce's Tableau](https://engineering.tableau.com/), [Amazon's Prime Video](https://www.primevideotech.com/) and Indeed.com. In Amazon, I was hired as the first Data Engineer to help build a Data Lake for Prime Video Search. At [Indeed](https://engineering.indeedblog.com/blog/category/big-data/), I worked for Marketing, Sales and Finance to help build their datawarehouses. 
+My most recent role, prior to Atlassian's was Staff Software Engineer and Data Engineering Team Lead for [Security](https://www.databricks.com/trust) at [Databricks](https://www.databricks.com/), where I was involved in overseeing the execution of multi-quarter Data Engineering projects, including design, automation and scaling of multi-TB/day data in [AWS](https://www.databricks.com/product/aws) and [Azure](https://azure.microsoft.com/en-us/products/databricks).
+
+Earlier, I was in Senior Data Engineering(Individual Contributor) roles at [Salesforce's Tableau](https://engineering.tableau.com/), [Amazon's Prime Video](https://www.primevideotech.com/) and Indeed.com. In Amazon, I was hired as the first Data Engineer to help build a Data Lake for Prime Video Search. At [Indeed](https://engineering.indeedblog.com/blog/category/big-data/), I worked for Marketing, Sales and Finance to help build their datawarehouses. 
 
 Prior to Indeed, I was in various roles are [Informatica](https://www.informatica.com/), focusing mainly on building ETL pipelines between relational databases and [MPP databases](https://www.sisense.com/glossary/mpp-database/).
 
 My interests and key areas of work include: 
+* Understanding short-term & long-term data engineering requirements, converting them into high-level data architecture roadmaps for execution.
 * Designing, building and scaling big data pipelines to ingest large volume data via **Spark** and **AWS, Azure**. I also have experience deploying big data pipelines on-premise.
 * Performance tuning for high volume ingestion pipelines with **SparkStreaming / AWS Kinesis, Azure Eventhubs on Databricks**.
 * Automation of workflows (such as Apache Airflow and other equivalent tooling on the cloud), automated infrastructure management on the cloud using **Terraform (HCL)**.
