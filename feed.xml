@@ -1,245 +1,245 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://harishkesavarao.github.io//feed.xml" rel="self" type="application/atom+xml"/><link href="http://harishkesavarao.github.io//" rel="alternate" type="text/html" hreflang="en"/><updated>2024-02-20T06:56:27+00:00</updated><id>http://harishkesavarao.github.io//feed.xml</id><title type="html">Harish Kesava Rao</title><subtitle>Posts about data engineering, surrounding infrastructure and big data. </subtitle><entry><title type="html">Building a data lake on Microsoft Azure.</title><link href="http://harishkesavarao.github.io//blog/2023/azure-data-lake/" rel="alternate" type="text/html" title="Building a data lake on Microsoft Azure."/><published>2023-03-01T05:18:00+00:00</published><updated>2023-03-01T05:18:00+00:00</updated><id>http://harishkesavarao.github.io//blog/2023/azure-data-lake</id><content type="html" xml:base="http://harishkesavarao.github.io//blog/2023/azure-data-lake/"><![CDATA[<h1 id="introduction">Introduction</h1> <h2 id="pre-requisite-reading">Pre-requisite reading</h2> <p>In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the Azure services I have listed below, you can skip this section.</p> <ol> <li><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview">Storage account overview.</a></li> <li><a href="https://learn.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code">IaC on Azure.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview">Azure Resource Manager.</a></li> <li><a href="https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=browser">Azure Service Principals.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-steps">Azure role-based access control (RBAC).</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about">Azure Event Hubs.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/databricks/structured-streaming/production">Production considerations for Structured Streaming.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/monitor-azure-resource#monitoring-data">Azure Monitor.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types">Azure Monitor Alerts</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview">Lifecycle Management Policies for Azure Storage Account.</a></li> </ol> <h2 id="infrastructure-as-code-iac">Infrastructure as Code (IaC)</h2> <p>All of the Azure cloud resources discussed can be created manually via the Azure Portal.</p> <p>In a production deployment, that is seldom the case. We typically use an Infrastructure as Code deployment to manage resources. Azure provides native support for IaC via the <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview">Azure Resource Manager</a> model.</p> <p>Azure supports other third-party platforms such as Terraform. To illustrate resource creation in this article, I will use Terraform examples for resource creation.</p> <h2 id="what-is-a-data-lake">What is a Data Lake?</h2> <blockquote> <p>A data lake is a centralized repository that ingests and stores large volumes of data in its original form. The data can then be processed and used as a basis for a variety of analytic needs. Due to its open, scalable architecture, a data lake can accommodate all types of data from any source, from structured (database tables, Excel sheets) to semi-structured (XML files, webpages) to unstructured (images, audio files, tweets), all without sacrificing fidelity. The data files are typically stored in staged zones—raw, cleansed, and curated—so that different types of users may use the data in its various forms to meet their needs. Data lakes provide core data consistency across a variety of applications, powering big data analytics, machine learning, predictive analytics, and other forms of intelligent action.</p> <p><cite>– Microsoft Azure Documentation.</cite></p> </blockquote> <h1 id="use-cases">Use cases</h1> <p>It is cost effective and performant to build a Data Lake when the data volume is over a certain threshold. The threshold is usually in the tens of GBs of data per day and continues to accumulate over time. If the data volume is less than that, it would be quicker and cheaper to build a traditional data warehouse or other solutions.</p> <p>As we saw above, a Data Lake is a centralized repository which stores all of the structured and unstructured data. This means that this data is available to anyone in an organization (with the relevant permissions). This could be - Data Analysts, Data Scientists, Data Engineers, Business Analysts, Product Managers, Finance or any other function. This offers a single source of truth of the data and each sub-function or department within an organization can choose to use the data as they see fit, with their own tooling for data access, analytics and visualization.</p> <h1 id="data-sources">Data sources</h1> <p>From what I have seen, most data sources in Azure fall under one of two types: Azure Storage Account and Eventhubs (streaming). We will discuss the following topics for these two data sources:</p> <ul> <li>How are we authenticating to these sources before ingesting data from them?</li> <li>What are the most efficient methods to ingest data from the two source types?</li> </ul> <p>We will not discuss the destination storage in this section. We will do it in the design decisions section.</p> <h2 id="azure-storage-account">Azure Storage Account</h2> <p><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview">Related Azure Doc.</a></p> <p>There are many types of storage accounts. For the purpose of this article, we will discuss Standard general-purpose v2, which supports the Azure Blob Storage (and Data Lake Storage) service.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"example-resources"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://harishkesavarao.github.io//feed.xml" rel="self" type="application/atom+xml"/><link href="http://harishkesavarao.github.io//" rel="alternate" type="text/html" hreflang="en"/><updated>2024-12-07T11:08:57+00:00</updated><id>http://harishkesavarao.github.io//feed.xml</id><title type="html">Harish Kesava Rao</title><subtitle>Posts about data engineering, surrounding infrastructure and big data. </subtitle><entry><title type="html">Building a data lake on Microsoft Azure.</title><link href="http://harishkesavarao.github.io//blog/2023/azure-data-lake/" rel="alternate" type="text/html" title="Building a data lake on Microsoft Azure."/><published>2023-03-01T05:18:00+00:00</published><updated>2023-03-01T05:18:00+00:00</updated><id>http://harishkesavarao.github.io//blog/2023/azure-data-lake</id><content type="html" xml:base="http://harishkesavarao.github.io//blog/2023/azure-data-lake/"><![CDATA[<h1 id="introduction">Introduction</h1> <h2 id="pre-requisite-reading">Pre-requisite reading</h2> <p>In order to fully understand or follow along with the article, I recommend reading some of the documents, articles and other links I have included in this section. If you have already worked on the Azure services I have listed below, you can skip this section.</p> <ol> <li><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview">Storage account overview.</a></li> <li><a href="https://learn.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code">IaC on Azure.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview">Azure Resource Manager.</a></li> <li><a href="https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=browser">Azure Service Principals.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-steps">Azure role-based access control (RBAC).</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about">Azure Event Hubs.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/databricks/structured-streaming/production">Production considerations for Structured Streaming.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/monitor-azure-resource#monitoring-data">Azure Monitor.</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types">Azure Monitor Alerts</a></li> <li><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview">Lifecycle Management Policies for Azure Storage Account.</a></li> </ol> <h2 id="infrastructure-as-code-iac">Infrastructure as Code (IaC)</h2> <p>All of the Azure cloud resources discussed can be created manually via the Azure Portal.</p> <p>In a production deployment, that is seldom the case. We typically use an Infrastructure as Code deployment to manage resources. Azure provides native support for IaC via the <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview">Azure Resource Manager</a> model.</p> <p>Azure supports other third-party platforms such as Terraform. To illustrate resource creation in this article, I will use Terraform examples for resource creation.</p> <h2 id="what-is-a-data-lake">What is a Data Lake?</h2> <blockquote> <p>A data lake is a centralized repository that ingests and stores large volumes of data in its original form. The data can then be processed and used as a basis for a variety of analytic needs. Due to its open, scalable architecture, a data lake can accommodate all types of data from any source, from structured (database tables, Excel sheets) to semi-structured (XML files, webpages) to unstructured (images, audio files, tweets), all without sacrificing fidelity. The data files are typically stored in staged zones—raw, cleansed, and curated—so that different types of users may use the data in its various forms to meet their needs. Data lakes provide core data consistency across a variety of applications, powering big data analytics, machine learning, predictive analytics, and other forms of intelligent action.</p> <p><cite>– Microsoft Azure Documentation.</cite></p> </blockquote> <h1 id="use-cases">Use cases</h1> <p>It is cost effective and performant to build a Data Lake when the data volume is over a certain threshold. The threshold is usually in the tens of GBs of data per day and continues to accumulate over time. If the data volume is less than that, it would be quicker and cheaper to build a traditional data warehouse or other solutions.</p> <p>As we saw above, a Data Lake is a centralized repository which stores all of the structured and unstructured data. This means that this data is available to anyone in an organization (with the relevant permissions). This could be - Data Analysts, Data Scientists, Data Engineers, Business Analysts, Product Managers, Finance or any other function. This offers a single source of truth of the data and each sub-function or department within an organization can choose to use the data as they see fit, with their own tooling for data access, analytics and visualization.</p> <h1 id="data-sources">Data sources</h1> <p>From what I have seen, most data sources in Azure fall under one of two types: Azure Storage Account and Eventhubs (streaming). We will discuss the following topics for these two data sources:</p> <ul> <li>How are we authenticating to these sources before ingesting data from them?</li> <li>What are the most efficient methods to ingest data from the two source types?</li> </ul> <p>We will not discuss the destination storage in this section. We will do it in the design decisions section.</p> <h2 id="azure-storage-account">Azure Storage Account</h2> <p><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview">Related Azure Doc.</a></p> <p>There are many types of storage accounts. For the purpose of this article, we will discuss Standard general-purpose v2, which supports the Azure Blob Storage (and Data Lake Storage) service.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"example-resources"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_account"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                     <span class="p">=</span> <span class="s2">"storageaccountname"</span>
-  <span class="nx">resource_group_name</span>      <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">location</span>                 <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">account_tier</span>             <span class="p">=</span> <span class="s2">"Standard"</span>
-  <span class="nx">account_replication_type</span> <span class="p">=</span> <span class="s2">"GRS"</span>
+  <span class="nx">name</span>                     <span class="o">=</span> <span class="s2">"storageaccountname"</span>
+  <span class="nx">resource_group_name</span>      <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">location</span>                 <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">account_tier</span>             <span class="o">=</span> <span class="s2">"Standard"</span>
+  <span class="nx">account_replication_type</span> <span class="o">=</span> <span class="s2">"GRS"</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-    <span class="nx">environment</span> <span class="p">=</span> <span class="s2">"staging"</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">environment</span> <span class="o">=</span> <span class="s2">"staging"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite> – Terraform Docs.</cite></p> <h3 id="authentication-and-authorization">Authentication and authorization</h3> <p>Options to authenticate to a storage account in Azure.</p> <p><strong>Azure AD/Entra ID and Azure RBAC</strong></p> <p>Azure Active Directory and Entra ID are the same.</p> <p>You can always define the following authentication keys using the Azure Portal, Azure CLI or other manual/UI means. For a production system, it is important to think of automated deployment of resources using IaC and via <a href="https://en.wikipedia.org/wiki/CI/CD">CI/CD.</a> In this context, Azure recommends using what is called as an Application and an associated Service Principal.</p> <p><em>Excerpt from Azure Docs below:</em></p> <blockquote> <p>Automated tools that use Azure services should always have restricted permissions. Instead of having applications sign in as a fully privileged user, Azure offers service principals.</p> <p>An Azure service principal is an identity created for use with applications, hosted services, and automated tools to access Azure resources. This access is restricted by the roles assigned to the service principal, giving you control over which resources can be accessed and at which level. For security reasons, it’s always recommended to use service principals with automated tools rather than allowing them to log in with a user identity.</p> <p>Microsoft recommends using Service Principals to authenticate access to resources as much as possible. To understand how to create Service Principals, how they are related to an Application, Tenant and resources, please read the sections on Service Principal and Azure RBAC.</p> <p><cite>– Microsoft Azure Documentation.</cite></p> </blockquote> <p>Setting up access to an Azure Storage Account via an Azure Service Principal is explained <a href="https://learn.microsoft.com/en-us/dynamics365/customer-insights/data/connect-service-principal">here.</a></p> <p><strong><a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal">Shared Key (WARNING: has full access to the storage account config and data)</a></strong> a shared key is passed with every request to the storage account. The shared key is created along with each storage account and can be used for authorization. Since it contains full access to a storage account, it is discouraged to use this as a standard authorization option.</p> <p>If you choose to use the shared key to access a Storage Account, an associated <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-configure-connection-string?toc=/azure/storage/blobs/toc.json&amp;bc=/azure/storage/blobs/breadcrumb/toc.json">connection string</a> needs to be generated alongside the shared key.</p> <p><strong>Delegated access with shared access signatures (SAS)</strong></p> <blockquote> <p>A shared access signature (SAS) enables you to grant limited access to containers and blobs in your storage account. When you create a SAS, you specify its constraints, including which Azure Storage resources a client is allowed to access, what permissions they have on those resources, and how long the SAS is valid.</p> <p><cite>– Microsoft Azure Documentation.</cite></p> </blockquote> <p>More information on creating a SAS token <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli">here</a>. The article explains using a security principal (an user, group or a Service Principal) to first assign the <code class="language-plaintext highlighter-rouge">Microsoft.Storage/storageAccounts/blobServices/generateUserDelegationKey</code> action to the security principal or via an RBAC such as <code class="language-plaintext highlighter-rouge">Storage Blob Data Contributor</code> and then use the permissions to then create an user delegated SAS using it.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"resourceGroupName"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"resourceGroupName"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_account"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                     <span class="p">=</span> <span class="s2">"storageaccountname"</span>
-  <span class="nx">resource_group_name</span>      <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">location</span>                 <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">account_tier</span>             <span class="p">=</span> <span class="s2">"Standard"</span>
-  <span class="nx">account_replication_type</span> <span class="p">=</span> <span class="s2">"GRS"</span>
+  <span class="nx">name</span>                     <span class="o">=</span> <span class="s2">"storageaccountname"</span>
+  <span class="nx">resource_group_name</span>      <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">location</span>                 <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">account_tier</span>             <span class="o">=</span> <span class="s2">"Standard"</span>
+  <span class="nx">account_replication_type</span> <span class="o">=</span> <span class="s2">"GRS"</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-    <span class="nx">environment</span> <span class="p">=</span> <span class="s2">"staging"</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">environment</span> <span class="o">=</span> <span class="s2">"staging"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">data</span> <span class="s2">"azurerm_storage_account_sas"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">connection_string</span> <span class="p">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">primary_connection_string</span>
-  <span class="nx">https_only</span>        <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">signed_version</span>    <span class="p">=</span> <span class="s2">"2017-07-29"</span>
+  <span class="nx">connection_string</span> <span class="o">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">primary_connection_string</span>
+  <span class="nx">https_only</span>        <span class="o">=</span> <span class="kc">true</span>
+  <span class="nx">signed_version</span>    <span class="o">=</span> <span class="s2">"2017-07-29"</span>
 
   <span class="nx">resource_types</span> <span class="p">{</span>
-    <span class="nx">service</span>   <span class="p">=</span> <span class="kc">true</span>
-    <span class="nx">container</span> <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">object</span>    <span class="p">=</span> <span class="kc">false</span>
+    <span class="nx">service</span>   <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">container</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">object</span>    <span class="o">=</span> <span class="kc">false</span>
   <span class="p">}</span>
 
   <span class="nx">services</span> <span class="p">{</span>
-    <span class="nx">blob</span>  <span class="p">=</span> <span class="kc">true</span>
-    <span class="nx">queue</span> <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">table</span> <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">file</span>  <span class="p">=</span> <span class="kc">false</span>
+    <span class="nx">blob</span>  <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">queue</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">table</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">file</span>  <span class="o">=</span> <span class="kc">false</span>
   <span class="p">}</span>
 
-  <span class="nx">start</span>  <span class="p">=</span> <span class="s2">"2018-03-21T00:00:00Z"</span>
-  <span class="nx">expiry</span> <span class="p">=</span> <span class="s2">"2020-03-21T00:00:00Z"</span>
+  <span class="nx">start</span>  <span class="o">=</span> <span class="s2">"2018-03-21T00:00:00Z"</span>
+  <span class="nx">expiry</span> <span class="o">=</span> <span class="s2">"2020-03-21T00:00:00Z"</span>
 
   <span class="nx">permissions</span> <span class="p">{</span>
-    <span class="nx">read</span>    <span class="p">=</span> <span class="kc">true</span>
-    <span class="nx">write</span>   <span class="p">=</span> <span class="kc">true</span>
-    <span class="nx">delete</span>  <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">list</span>    <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">add</span>     <span class="p">=</span> <span class="kc">true</span>
-    <span class="nx">create</span>  <span class="p">=</span> <span class="kc">true</span>
-    <span class="nx">update</span>  <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">process</span> <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">tag</span>     <span class="p">=</span> <span class="kc">false</span>
-    <span class="nx">filter</span>  <span class="p">=</span> <span class="kc">false</span>
-  <span class="p">}</span>
+    <span class="nx">read</span>    <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">write</span>   <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">delete</span>  <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">list</span>    <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">add</span>     <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">create</span>  <span class="o">=</span> <span class="kc">true</span>
+    <span class="nx">update</span>  <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">process</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">tag</span>     <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">filter</span>  <span class="o">=</span> <span class="kc">false</span>
+  <span class="err">}</span>
 <span class="p">}</span>
 
 <span class="k">output</span> <span class="s2">"sas_url_query_string"</span> <span class="p">{</span>
-  <span class="nx">value</span> <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">azurerm_storage_account_sas</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">sas</span>
+  <span class="nx">value</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">azurerm_storage_account_sas</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">sas</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite> – Terraform Docs.</cite></p> <h2 id="azure-event-hubs">Azure Event Hubs</h2> <p><a href="https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about">Related Azure doc.</a></p> <blockquote> <p>Azure Event Hubs is a cloud native data streaming service that can stream millions of events per second, with low latency, from any source to any destination. Event Hubs is compatible with Apache Kafka, and it enables you to run existing Kafka workloads without any code changes.</p> <p><cite>– Microsoft Azure Documentation.</cite></p> </blockquote> <p>Eventhubs allows ingesting streaming data to a data lake. We will confine our discussion to receiving data, setting up authorization and a few other basics in this section. Ingestion data will be discussed in the Ingestion section for Event Hubs.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"example-resources"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"example-resources"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_eventhub_namespace"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"acceptanceTestEventHubNamespace"</span>
-  <span class="nx">location</span>            <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">sku</span>                 <span class="p">=</span> <span class="s2">"Standard"</span>
-  <span class="nx">capacity</span>            <span class="p">=</span> <span class="mi">1</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"acceptanceTestEventHubNamespace"</span>
+  <span class="nx">location</span>            <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">resource_group_name</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">sku</span>                 <span class="o">=</span> <span class="s2">"Standard"</span>
+  <span class="nx">capacity</span>            <span class="o">=</span> <span class="mi">1</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-    <span class="nx">environment</span> <span class="p">=</span> <span class="s2">"Production"</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">environment</span> <span class="o">=</span> <span class="s2">"Production"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_eventhub"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"acceptanceTestEventHub"</span>
-  <span class="nx">namespace_name</span>      <span class="p">=</span> <span class="nx">azurerm_eventhub_namespace</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">partition_count</span>     <span class="p">=</span> <span class="mi">2</span>
-  <span class="nx">message_retention</span>   <span class="p">=</span> <span class="mi">1</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"acceptanceTestEventHub"</span>
+  <span class="nx">namespace_name</span>      <span class="o">=</span> <span class="nx">azurerm_eventhub_namespace</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">resource_group_name</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">partition_count</span>     <span class="o">=</span> <span class="mi">2</span>
+  <span class="nx">message_retention</span>   <span class="o">=</span> <span class="mi">1</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite> – Terraform Docs.</cite></p> <h3 id="authentication-and-authorization-1">Authentication and authorization</h3> <p>The authorization mechanism for event hubs is similar to the SAS token we discussed for Azure Storage Account, with the only difference being, we can define authorization policies associated with each event hubs topic (you can define a SAS token for an eventhubs namespace or as well, but I prefer to do it a event hubs topic level to keep it more granular). The policy defines the level of access for the SAS token.</p> <p><a href="https://learn.microsoft.com/en-us/azure/event-hubs/authenticate-shared-access-signature">Authentication</a> and <a href="https://learn.microsoft.com/en-us/azure/event-hubs/authorize-access-shared-access-signature">authorization</a> using a shared access signature.</p> <p>You can generate SAS authorization policies and tokens using the Security Principal method described above in the Storage Account’s Authorization section.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"example-resources"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"example-resources"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_eventhub_namespace"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"acceptanceTestEventHubNamespace"</span>
-  <span class="nx">location</span>            <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">sku</span>                 <span class="p">=</span> <span class="s2">"Basic"</span>
-  <span class="nx">capacity</span>            <span class="p">=</span> <span class="mi">2</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"acceptanceTestEventHubNamespace"</span>
+  <span class="nx">location</span>            <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">resource_group_name</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">sku</span>                 <span class="o">=</span> <span class="s2">"Basic"</span>
+  <span class="nx">capacity</span>            <span class="o">=</span> <span class="mi">2</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-    <span class="nx">environment</span> <span class="p">=</span> <span class="s2">"Production"</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">environment</span> <span class="o">=</span> <span class="s2">"Production"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_eventhub"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"acceptanceTestEventHub"</span>
-  <span class="nx">namespace_name</span>      <span class="p">=</span> <span class="nx">azurerm_eventhub_namespace</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">partition_count</span>     <span class="p">=</span> <span class="mi">2</span>
-  <span class="nx">message_retention</span>   <span class="p">=</span> <span class="mi">2</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"acceptanceTestEventHub"</span>
+  <span class="nx">namespace_name</span>      <span class="o">=</span> <span class="nx">azurerm_eventhub_namespace</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">resource_group_name</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">partition_count</span>     <span class="o">=</span> <span class="mi">2</span>
+  <span class="nx">message_retention</span>   <span class="o">=</span> <span class="mi">2</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_eventhub_authorization_rule"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"navi"</span>
-  <span class="nx">namespace_name</span>      <span class="p">=</span> <span class="nx">azurerm_eventhub_namespace</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">eventhub_name</span>       <span class="p">=</span> <span class="nx">azurerm_eventhub</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">listen</span>              <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">send</span>                <span class="p">=</span> <span class="kc">false</span>
-  <span class="nx">manage</span>              <span class="p">=</span> <span class="kc">false</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"navi"</span>
+  <span class="nx">namespace_name</span>      <span class="o">=</span> <span class="nx">azurerm_eventhub_namespace</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">eventhub_name</span>       <span class="o">=</span> <span class="nx">azurerm_eventhub</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">resource_group_name</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">listen</span>              <span class="o">=</span> <span class="kc">true</span>
+  <span class="nx">send</span>                <span class="o">=</span> <span class="kc">false</span>
+  <span class="nx">manage</span>              <span class="o">=</span> <span class="kc">false</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite> – Terraform Docs.</cite></p> <h1 id="ingestion">Ingestion</h1> <p>So far, we have discussed data sources and associated authorization mechanisms. Now, we will discuss methods to ingest data from the different data sources using the configured authorization. A few design questions related to ingestion:</p> <ul> <li>How frequently do you need to ingest - batch, streaming?</li> <li>What is your expected throughput when ingesting data? Can you data lake tolerate some delay at the benefit of reduced cost?</li> <li>Do you need to deploy infrastructure related to ingestion? What kinds of resources? Are specific authorization mechanisms needed for these?</li> </ul> <h2 id="azure-storage-account-1">Azure Storage Account</h2> <p><strong>Data Migration</strong></p> <p>When it comes to ingesting data into a Data Lake, the first level of ingestion usually involves the copying of raw data. In other words, data is ingestd as-is from the source and no data transformations take place. This simplifies things for the first-level ingestion, where you do not have to build an ETL pipeline to copy/move data.</p> <p>The Azure CLI <code class="language-plaintext highlighter-rouge">az storage blob copy</code> <a href="https://learn.microsoft.com/en-us/cli/azure/storage/blob/copy?view=azure-cli-latest">command</a> is helpful in performing such batch copy operations from the source Azure Storage Account to the destination (Data Lake) Azure Storage Account. The <a href="#authentication-and-authorization">authentication and authorization mechanisms</a> we discussed during the Azure Storage Account data sources can be used when running the command.</p> <p><strong>Event handling</strong></p> <p>Instead of scheduling a batch copy, we can ingest data using an event-driven mechanism. <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview">Azure Storage Accounts can be configured to send certain (specified via a filter) events to Azure Event Grid</a>. Event Grid then delivers these events to applications listening to it.</p> <p>Authentication can be implemented via Azure AD/Entra ID + RBAC as described above or here, where an <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory#overview-of-microsoft-entra-id-for-blobs">Oauth token is requested at runtime</a> to allow subscribing to events occurring from the Azure Storage Account.</p> <p><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#filtering-events">Read here</a> about filtering events to be sent to the Event Grid. <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#practices-for-consuming-events">Some caveats</a> to watch when using this option for ingestion.</p> <p><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#practices-for-consuming-events">Azure Queue Storage</a> is one of the applications which can be configured to listen to Azure Event Grid. Your client application can then read queue messages from Azure Queue Storage. A Python code sample is available <a href="https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-python?tabs=passwordless%2Croles-azure-portal%2Cenvironment-variable-windows%2Csign-in-visual-studio-code">here</a>.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"example-resources"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"example-resources"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_account"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                     <span class="p">=</span> <span class="s2">"exampleasa"</span>
-  <span class="nx">resource_group_name</span>      <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">location</span>                 <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">account_tier</span>             <span class="p">=</span> <span class="s2">"Standard"</span>
-  <span class="nx">account_replication_type</span> <span class="p">=</span> <span class="s2">"LRS"</span>
+  <span class="nx">name</span>                     <span class="o">=</span> <span class="s2">"exampleasa"</span>
+  <span class="nx">resource_group_name</span>      <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">location</span>                 <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">account_tier</span>             <span class="o">=</span> <span class="s2">"Standard"</span>
+  <span class="nx">account_replication_type</span> <span class="o">=</span> <span class="s2">"LRS"</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-    <span class="nx">environment</span> <span class="p">=</span> <span class="s2">"staging"</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">environment</span> <span class="o">=</span> <span class="s2">"staging"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_queue"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                 <span class="p">=</span> <span class="s2">"example-astq"</span>
-  <span class="nx">storage_account_name</span> <span class="p">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">name</span>                 <span class="o">=</span> <span class="s2">"example-astq"</span>
+  <span class="nx">storage_account_name</span> <span class="o">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_eventgrid_event_subscription"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>  <span class="p">=</span> <span class="s2">"example-aees"</span>
-  <span class="nx">scope</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">name</span>  <span class="o">=</span> <span class="s2">"example-aees"</span>
+  <span class="nx">scope</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
 
   <span class="nx">storage_queue_endpoint</span> <span class="p">{</span>
-    <span class="nx">storage_account_id</span> <span class="p">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
-    <span class="nx">queue_name</span>         <span class="p">=</span> <span class="nx">azurerm_storage_queue</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+    <span class="nx">storage_account_id</span> <span class="o">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+    <span class="nx">queue_name</span>         <span class="o">=</span> <span class="nx">azurerm_storage_queue</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"example-resources"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"example-resources"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_account"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                     <span class="p">=</span> <span class="s2">"examplestorageacc"</span>
-  <span class="nx">resource_group_name</span>      <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">location</span>                 <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">account_tier</span>             <span class="p">=</span> <span class="s2">"Standard"</span>
-  <span class="nx">account_replication_type</span> <span class="p">=</span> <span class="s2">"LRS"</span>
+  <span class="nx">name</span>                     <span class="o">=</span> <span class="s2">"examplestorageacc"</span>
+  <span class="nx">resource_group_name</span>      <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">location</span>                 <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">account_tier</span>             <span class="o">=</span> <span class="s2">"Standard"</span>
+  <span class="nx">account_replication_type</span> <span class="o">=</span> <span class="s2">"LRS"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_queue"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                 <span class="p">=</span> <span class="s2">"mysamplequeue"</span>
-  <span class="nx">storage_account_name</span> <span class="p">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">name</span>                 <span class="o">=</span> <span class="s2">"mysamplequeue"</span>
+  <span class="nx">storage_account_name</span> <span class="o">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
 <span class="p">}</span>
 
 </code></pre></div></div> <p><cite> – Terraform Docs.</cite></p> <h2 id="azure-event-hubs-1">Azure Event Hubs</h2> <p><strong>Azure Event Hubs for Kafka</strong></p> <p><a href="https://learn.microsoft.com/en-us/azure/event-hubs/azure-event-hubs-kafka-overview">Event Hubs data can be consumed using a Kafka Consumer</a>. The authentication mechanism is the same, and I prefer to use the SAS connection string created along with the authorization rule/policy.</p> <p>Usually, given larger volumes for a big data lake, we can configure <a href="https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-kafka-spark-tutorial#read-from-event-hubs-for-kafka">Spark Structured Streaming for Kafka</a> and consume events from Azure Event Hub. More information on configuring Kafka (bootstrap servers, security protocol, sasl mechanism, sasl jaas config etc.) and other settings <a href="https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-quickstart-kafka-enabled-event-hubs?tabs=connection-string#send-and-receive-messages-with-kafka-in-event-hubs">here</a>.</p> <div class="row mt-3"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/eventhubs_kafka-480.webp"/> <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/eventhubs_kafka-800.webp"/> <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/eventhubs_kafka-1400.webp"/> <img src="/assets/img/eventhubs_kafka.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><strong>Event handling</strong></p> <p>The same mechanism for event handling for Azure Storage Account applies to Event Hubs as well. And not just for Event Hubs, there are a <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview#the-event-model">number of Azure services</a> which can send data to Azure Event Grid.</p> <p>Once the <a href="#authentication-and-authorization-1">required permissions</a> are configured for Event Hubs, the topic can send data to the Event Grid.</p> <div class="row mt-3"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/event_grid_queue_storage-480.webp"/> <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/event_grid_queue_storage-800.webp"/> <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/event_grid_queue_storage-1400.webp"/> <img src="/assets/img/event_grid_queue_storage.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <h1 id="design-decisions-and-trade-offs">Design decisions and trade-offs</h1> <h2 id="compute">Compute</h2> <p>Azure provides comprehensive documentation on different compute types. Based on your use case, you can follow the <a href="https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree">flowchart here</a> and choose a compute type for your workloads.</p> <h2 id="storage--azure-storage-account">Storage / Azure Storage Account</h2> <p><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/security-recommendations#loggingmonitoring">Security recommendations for Blog Storage.</a> - specifically data protection, networking and logging/monitoring sections.</p> <p>If you are storing sensitive data in your destination Azure Storage Account for the Data Lake, it is all the more important to setup <a href="https://learn.microsoft.com/en-us/azure/storage/blobs/monitor-blob-storage?tabs=azure-portal">logging and monitoring</a> for the Storage Account.</p> <p><strong>Access tiers, lifecycle management</strong></p> <p><a href="https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview">Reading for this section.</a></p> <p>Azure Storage Management Policy.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"azurerm_resource_group"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>     <span class="p">=</span> <span class="s2">"resourceGroupName"</span>
-  <span class="nx">location</span> <span class="p">=</span> <span class="s2">"West Europe"</span>
+  <span class="nx">name</span>     <span class="o">=</span> <span class="s2">"resourceGroupName"</span>
+  <span class="nx">location</span> <span class="o">=</span> <span class="s2">"West Europe"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_account"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">name</span>                <span class="p">=</span> <span class="s2">"storageaccountname"</span>
-  <span class="nx">resource_group_name</span> <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">name</span>                <span class="o">=</span> <span class="s2">"storageaccountname"</span>
+  <span class="nx">resource_group_name</span> <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">name</span>
 
-  <span class="nx">location</span>                 <span class="p">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
-  <span class="nx">account_tier</span>             <span class="p">=</span> <span class="s2">"Standard"</span>
-  <span class="nx">account_replication_type</span> <span class="p">=</span> <span class="s2">"LRS"</span>
-  <span class="nx">account_kind</span>             <span class="p">=</span> <span class="s2">"BlobStorage"</span>
+  <span class="nx">location</span>                 <span class="o">=</span> <span class="nx">azurerm_resource_group</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">location</span>
+  <span class="nx">account_tier</span>             <span class="o">=</span> <span class="s2">"Standard"</span>
+  <span class="nx">account_replication_type</span> <span class="o">=</span> <span class="s2">"LRS"</span>
+  <span class="nx">account_kind</span>             <span class="o">=</span> <span class="s2">"BlobStorage"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"azurerm_storage_management_policy"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">storage_account_id</span> <span class="p">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">storage_account_id</span> <span class="o">=</span> <span class="nx">azurerm_storage_account</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
 
   <span class="nx">rule</span> <span class="p">{</span>
-    <span class="nx">name</span>    <span class="p">=</span> <span class="s2">"rule1"</span>
-    <span class="nx">enabled</span> <span class="p">=</span> <span class="kc">true</span>
+    <span class="nx">name</span>    <span class="o">=</span> <span class="s2">"rule1"</span>
+    <span class="nx">enabled</span> <span class="o">=</span> <span class="kc">true</span>
     <span class="nx">filters</span> <span class="p">{</span>
-      <span class="nx">prefix_match</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"container1/prefix1"</span><span class="p">]</span>
-      <span class="nx">blob_types</span>   <span class="p">=</span> <span class="p">[</span><span class="s2">"blockBlob"</span><span class="p">]</span>
+      <span class="nx">prefix_match</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"container1/prefix1"</span><span class="p">]</span>
+      <span class="nx">blob_types</span>   <span class="o">=</span> <span class="p">[</span><span class="s2">"blockBlob"</span><span class="p">]</span>
       <span class="nx">match_blob_index_tag</span> <span class="p">{</span>
-        <span class="nx">name</span>      <span class="p">=</span> <span class="s2">"tag1"</span>
-        <span class="nx">operation</span> <span class="p">=</span> <span class="s2">"=="</span>
-        <span class="nx">value</span>     <span class="p">=</span> <span class="s2">"val1"</span>
+        <span class="nx">name</span>      <span class="o">=</span> <span class="s2">"tag1"</span>
+        <span class="nx">operation</span> <span class="o">=</span> <span class="s2">"=="</span>
+        <span class="nx">value</span>     <span class="o">=</span> <span class="s2">"val1"</span>
       <span class="p">}</span>
     <span class="p">}</span>
     <span class="nx">actions</span> <span class="p">{</span>
       <span class="nx">base_blob</span> <span class="p">{</span>
-        <span class="nx">tier_to_cool_after_days_since_modification_greater_than</span>    <span class="p">=</span> <span class="mi">10</span>
-        <span class="nx">tier_to_archive_after_days_since_modification_greater_than</span> <span class="p">=</span> <span class="mi">50</span>
-        <span class="nx">delete_after_days_since_modification_greater_than</span>          <span class="p">=</span> <span class="mi">100</span>
+        <span class="nx">tier_to_cool_after_days_since_modification_greater_than</span>    <span class="o">=</span> <span class="mi">10</span>
+        <span class="nx">tier_to_archive_after_days_since_modification_greater_than</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="nx">delete_after_days_since_modification_greater_than</span>          <span class="o">=</span> <span class="mi">100</span>
       <span class="p">}</span>
       <span class="nx">snapshot</span> <span class="p">{</span>
-        <span class="nx">delete_after_days_since_creation_greater_than</span> <span class="p">=</span> <span class="mi">30</span>
+        <span class="nx">delete_after_days_since_creation_greater_than</span> <span class="o">=</span> <span class="mi">30</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
   <span class="nx">rule</span> <span class="p">{</span>
-    <span class="nx">name</span>    <span class="p">=</span> <span class="s2">"rule2"</span>
-    <span class="nx">enabled</span> <span class="p">=</span> <span class="kc">false</span>
+    <span class="nx">name</span>    <span class="o">=</span> <span class="s2">"rule2"</span>
+    <span class="nx">enabled</span> <span class="o">=</span> <span class="kc">false</span>
     <span class="nx">filters</span> <span class="p">{</span>
-      <span class="nx">prefix_match</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"container2/prefix1"</span><span class="p">,</span> <span class="s2">"container2/prefix2"</span><span class="p">]</span>
-      <span class="nx">blob_types</span>   <span class="p">=</span> <span class="p">[</span><span class="s2">"blockBlob"</span><span class="p">]</span>
+      <span class="nx">prefix_match</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"container2/prefix1"</span><span class="p">,</span> <span class="s2">"container2/prefix2"</span><span class="p">]</span>
+      <span class="nx">blob_types</span>   <span class="o">=</span> <span class="p">[</span><span class="s2">"blockBlob"</span><span class="p">]</span>
     <span class="p">}</span>
     <span class="nx">actions</span> <span class="p">{</span>
       <span class="nx">base_blob</span> <span class="p">{</span>
-        <span class="nx">tier_to_cool_after_days_since_modification_greater_than</span>    <span class="p">=</span> <span class="mi">11</span>
-        <span class="nx">tier_to_archive_after_days_since_modification_greater_than</span> <span class="p">=</span> <span class="mi">51</span>
-        <span class="nx">delete_after_days_since_modification_greater_than</span>          <span class="p">=</span> <span class="mi">101</span>
+        <span class="nx">tier_to_cool_after_days_since_modification_greater_than</span>    <span class="o">=</span> <span class="mi">11</span>
+        <span class="nx">tier_to_archive_after_days_since_modification_greater_than</span> <span class="o">=</span> <span class="mi">51</span>
+        <span class="nx">delete_after_days_since_modification_greater_than</span>          <span class="o">=</span> <span class="mi">101</span>
       <span class="p">}</span>
       <span class="nx">snapshot</span> <span class="p">{</span>
-        <span class="nx">change_tier_to_archive_after_days_since_creation</span> <span class="p">=</span> <span class="mi">90</span>
-        <span class="nx">change_tier_to_cool_after_days_since_creation</span>    <span class="p">=</span> <span class="mi">23</span>
-        <span class="nx">delete_after_days_since_creation_greater_than</span>    <span class="p">=</span> <span class="mi">31</span>
+        <span class="nx">change_tier_to_archive_after_days_since_creation</span> <span class="o">=</span> <span class="mi">90</span>
+        <span class="nx">change_tier_to_cool_after_days_since_creation</span>    <span class="o">=</span> <span class="mi">23</span>
+        <span class="nx">delete_after_days_since_creation_greater_than</span>    <span class="o">=</span> <span class="mi">31</span>
       <span class="p">}</span>
       <span class="nx">version</span> <span class="p">{</span>
-        <span class="nx">change_tier_to_archive_after_days_since_creation</span> <span class="p">=</span> <span class="mi">9</span>
-        <span class="nx">change_tier_to_cool_after_days_since_creation</span>    <span class="p">=</span> <span class="mi">90</span>
-        <span class="nx">delete_after_days_since_creation</span>                 <span class="p">=</span> <span class="mi">3</span>
+        <span class="nx">change_tier_to_archive_after_days_since_creation</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="nx">change_tier_to_cool_after_days_since_creation</span>    <span class="o">=</span> <span class="mi">90</span>
+        <span class="nx">delete_after_days_since_creation</span>                 <span class="o">=</span> <span class="mi">3</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -278,211 +278,211 @@
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div> <p><cite>– AWS Docs.</cite></p> <ul> <li>Steps 2 and 3 need to be followed by 2 new IAM roles in the source and destination AWS accounts respectively and the policies need to be attached to those newly created roles.</li> </ul> <p>The corresponding Terraform code blocks to implement the above IAM role and policies.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_iam_role"</span> <span class="s2">"examplerole"</span> <span class="p">{</span>
-  <span class="nx">name</span> <span class="p">=</span> <span class="s2">"test_role"</span>
+  <span class="nx">name</span> <span class="o">=</span> <span class="s2">"test_role"</span>
 
-  <span class="nx">assume_role_policy</span> <span class="p">=</span> <span class="nx">jsonencode</span><span class="p">({</span>
-    <span class="nx">Version</span> <span class="p">=</span> <span class="s2">"2012-10-17"</span>
-    <span class="nx">Statement</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="nx">assume_role_policy</span> <span class="o">=</span> <span class="nx">jsonencode</span><span class="p">({</span>
+    <span class="nx">Version</span> <span class="o">=</span> <span class="s2">"2012-10-17"</span>
+    <span class="nx">Statement</span> <span class="o">=</span> <span class="p">[</span>
       <span class="p">{</span>
-        <span class="nx">Action</span> <span class="p">=</span> <span class="s2">"sts:AssumeRole"</span>
-        <span class="nx">Effect</span> <span class="p">=</span> <span class="s2">"Allow"</span>
-        <span class="nx">Sid</span>    <span class="p">=</span> <span class="s2">""</span>
-        <span class="nx">Principal</span> <span class="p">=</span> <span class="p">{</span>
-          <span class="nx">Service</span> <span class="p">=</span> <span class="s2">"s3.amazonaws.com"</span>
+        <span class="nx">Action</span> <span class="o">=</span> <span class="s2">"sts:AssumeRole"</span>
+        <span class="nx">Effect</span> <span class="o">=</span> <span class="s2">"Allow"</span>
+        <span class="nx">Sid</span>    <span class="o">=</span> <span class="s2">""</span>
+        <span class="nx">Principal</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">Service</span> <span class="o">=</span> <span class="s2">"s3.amazonaws.com"</span>
         <span class="p">}</span>
       <span class="p">},</span>
     <span class="p">]</span>
   <span class="p">})</span>
 
-  <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-    <span class="nx">tag-key</span> <span class="p">=</span> <span class="s2">"tag-value"</span>
+  <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">tag-key</span> <span class="o">=</span> <span class="s2">"tag-value"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <ul> <li>Create a new IAM policy to allow access to S3 buckets.</li> </ul> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">resource</span> <span class="s2">"aws_iam_policy"</span> <span class="s2">"s3_access_policy"</span> <span class="p">{</span>
-  <span class="nx">name</span>        <span class="p">=</span> <span class="s2">"s3_access_policy"</span>
-  <span class="nx">path</span>        <span class="p">=</span> <span class="s2">"/"</span>
-  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"My test policy"</span>
+  <span class="nx">name</span>        <span class="o">=</span> <span class="s2">"s3_access_policy"</span>
+  <span class="nx">path</span>        <span class="o">=</span> <span class="s2">"/"</span>
+  <span class="nx">description</span> <span class="o">=</span> <span class="s2">"My test policy"</span>
 
-  <span class="nx">policy</span> <span class="p">=</span> <span class="nx">jsonencode</span><span class="p">({</span>
-    <span class="nx">Version</span> <span class="p">=</span> <span class="s2">"2012-10-17"</span>
-    <span class="nx">Statement</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="nx">policy</span> <span class="o">=</span> <span class="nx">jsonencode</span><span class="p">({</span>
+    <span class="nx">Version</span> <span class="o">=</span> <span class="s2">"2012-10-17"</span>
+    <span class="nx">Statement</span> <span class="o">=</span> <span class="p">[</span>
       <span class="p">{</span>
-        <span class="nx">Action</span> <span class="p">=</span> <span class="p">[</span>
+        <span class="nx">Action</span> <span class="o">=</span> <span class="p">[</span>
           <span class="s2">"s3:GetObject"</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="nx">Effect</span>   <span class="p">=</span> <span class="s2">"Allow"</span>
-        <span class="nx">Resource</span> <span class="p">=</span> <span class="s2">"arn:aws:s3:::DOC-EXAMPLE-BUCKET1/*"</span>
+        <span class="nx">Effect</span>   <span class="o">=</span> <span class="s2">"Allow"</span>
+        <span class="nx">Resource</span> <span class="o">=</span> <span class="s2">"arn:aws:s3:::DOC-EXAMPLE-BUCKET1/*"</span>
       <span class="p">},</span>
     <span class="p">]</span>
   <span class="p">})</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <ul> <li>Attach the new IAM policy to the corresponding IAM role.</li> </ul> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_iam_role_policy_attachment"</span> <span class="s2">"test-attach"</span> <span class="p">{</span>
-  <span class="nx">role</span>       <span class="p">=</span> <span class="nx">aws_iam_role</span><span class="p">.</span><span class="nx">examplerole</span><span class="p">.</span><span class="nx">name</span>
-  <span class="nx">policy_arn</span> <span class="p">=</span> <span class="nx">aws_iam_policy</span><span class="p">.</span><span class="nx">s3_access_policy</span><span class="p">.</span><span class="nx">arn</span>
+  <span class="nx">role</span>       <span class="o">=</span> <span class="nx">aws_iam_role</span><span class="p">.</span><span class="nx">examplerole</span><span class="p">.</span><span class="nx">name</span>
+  <span class="nx">policy_arn</span> <span class="o">=</span> <span class="nx">aws_iam_policy</span><span class="p">.</span><span class="nx">s3_access_policy</span><span class="p">.</span><span class="nx">arn</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <h3 id="data-ingestion-between-source-and-destination-aws-s3-buckets">Data ingestion between source and destination AWS S3 buckets</h3> <p>There are many ways to transfer large volumes of data between two S3 buckets. AWS describes them very well <a href="https://repost.aws/knowledge-center/s3-large-transfer-between-buckets">here</a>.</p> <p>Additionally, one other option is to setup downstream trigger jobs to run when a new event occurs in the AWS S3 bucket. We previously discussed setting up <a href="#security">notifications</a> for events in AWS S3 buckets. The same setup can be used here. Once the SNS is setup, the destination AWS account can listen to these notifications via the AWS Simple Queue Service (SQS). The implementation is discussed <a href="https://docs.aws.amazon.com/sns/latest/dg/sns-send-message-to-sqs-cross-account.html">here</a>. Once the message is received from the Queue, you can write your own <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/examples-sqs-messages.html#sqs-messages-receive">application</a> to ingest the data and write it to a destination of your choice, which could be another AWS S3 bucket or a Delta table etc.</p> <h2 id="aws-kinesis">AWS Kinesis</h2> <div class="row mt-3"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/kinesis-stream-480.webp"/> <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/kinesis-stream-800.webp"/> <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/kinesis-stream-1400.webp"/> <img src="/assets/img/kinesis-stream.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p>One of the most popular ways of sending and receiving large volumes of data is AWS Kinesis, via streaming. This is one of the most comprehensive <a href="https://d0.awsstatic.com/whitepapers/whitepaper-streaming-data-solutions-on-aws-with-amazon-kinesis.pdf">whitepapers</a> explaining different Kinesis use cases as well as tooling/services to consume/sink data from Kinesis.</p> <p>Since the whitepaper explains everything in detail, I will not elaborate on different options available with Kinesis.</p> <h1 id="design-decisions-trade-offs">Design decisions, trade-offs</h1> <p>We have discussed data sources at length. Now, we will talk about other areas of building the data lake, such as compute, alerting and analytics.</p> <h2 id="compute">Compute</h2> <p>When it comes to compute, there are a few design considerations:</p> <ul> <li>Do you have enough compute when your workloads need them?</li> <li>Is compute being utilized effectively or are you paying for compute when there isn’t utilization?</li> <li>Are you able to customize scaling up or down based on your workload? Is scaling causing additional overhead?</li> <li>Are there custom compute types available for different workloads - streaming, batch or maintenance jobs?</li> <li>Can you reserve compute ahead of time to reduce costs?</li> </ul> <p>If the compute is <a href="https://aws.amazon.com/serverless/">serverless</a>, it gives you scalability, but it comes at a cost because there is typically less flexibility in controlling the compute types and asscociated costs compared to instance based compute types.</p> <p>Going with instance based compute allows more granularity with costs, but it adds overhead with maintenance of instances, although services like AWS EMR do scale your instances based on usage in recent versions, offering a good middle ground. Smaller workloads can be run on serverless options such as AWS Lambda.</p> <p>Based on all of these considerations, you can choose whichever <a href="https://aws.amazon.com/products/compute/">AWS compute works</a> for your use case.</p> <h2 id="storage">Storage</h2> <h3 id="s3">S3</h3> <p>The most common storage mechanism in AWS is in S3, which works quite well for a data lake destination storage.</p> <p>Some considerations for optimized storage:</p> <ul> <li><strong>Partitioning:</strong> Partition all data written to S3 buckets based on at least one partition - such as date, and possibly more, based on the data. This also facilitates efficient consumption/querying of data and for other downstream jobs to read the data from the data lake.</li> <li><strong>File format:</strong> <a href="https://spark.apache.org/docs/latest/sql-data-sources.html">Many file formats</a> are available and supported by Spark (more on this in the <a href="#etl">ETL</a> section), of which, <a href="https://spark.apache.org/docs/latest/sql-data-sources-parquet.html">parquet</a> seems to have a good trade-off in terms of write-throughput, compression, read-throughput. It also offers additional features such as partition discovery and schema merging/evolution, which are important for a data lake use case.</li> <li><strong>Compression:</strong> It is important to compress files to avoid additonal costs and when storing data in S3. Parquet supports snappy, gzip, lzo, brotli, lz4, zstd types and I have found snappy to be efficient in terms of storage and retrieval.</li> </ul> <h3 id="lifecycle-management">Lifecycle management</h3> <p>You might want to consider maintenance of the objects in the S3 bucket, since the data might grow over time. This results in larger partition counts to maintain in addition to growing costs. So, it is a good practice to define a lifecycle configuration for the S3 objects.</p> <blockquote> <p>An S3 Lifecycle configuration is an XML file that consists of a set of rules with predefined actions that you want Amazon S3 to perform on objects during their lifetime.</p> <p><cite>– AWS Documentation.</cite></p> </blockquote> <p>The objects can be <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration#creating-a-lifecycle-configuration-for-a-bucket-with-versioning">set</a> to either transition to another storage class or to expire after a certain time period.</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_s3_bucket_lifecycle_configuration"</span> <span class="s2">"versioning-bucket-config"</span> <span class="p">{</span>
   <span class="c1"># Must have bucket versioning enabled first</span>
-  <span class="nx">depends_on</span> <span class="p">=</span> <span class="p">[</span><span class="nx">aws_s3_bucket_versioning</span><span class="p">.</span><span class="nx">versioning</span><span class="p">]</span>
+  <span class="nx">depends_on</span> <span class="o">=</span> <span class="p">[</span><span class="nx">aws_s3_bucket_versioning</span><span class="p">.</span><span class="nx">versioning</span><span class="p">]</span>
 
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">versioning_bucket</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">versioning_bucket</span><span class="p">.</span><span class="nx">id</span>
 
   <span class="nx">rule</span> <span class="p">{</span>
-    <span class="nx">id</span> <span class="p">=</span> <span class="s2">"config"</span>
+    <span class="nx">id</span> <span class="o">=</span> <span class="s2">"config"</span>
 
     <span class="nx">filter</span> <span class="p">{</span>
-      <span class="nx">prefix</span> <span class="p">=</span> <span class="s2">"config/"</span>
+      <span class="nx">prefix</span> <span class="o">=</span> <span class="s2">"config/"</span>
     <span class="p">}</span>
 
     <span class="nx">noncurrent_version_expiration</span> <span class="p">{</span>
-      <span class="nx">noncurrent_days</span> <span class="p">=</span> <span class="mi">90</span>
+      <span class="nx">noncurrent_days</span> <span class="o">=</span> <span class="mi">90</span>
     <span class="p">}</span>
 
     <span class="nx">noncurrent_version_transition</span> <span class="p">{</span>
-      <span class="nx">noncurrent_days</span> <span class="p">=</span> <span class="mi">30</span>
-      <span class="nx">storage_class</span>   <span class="p">=</span> <span class="s2">"STANDARD_IA"</span>
+      <span class="nx">noncurrent_days</span> <span class="o">=</span> <span class="mi">30</span>
+      <span class="nx">storage_class</span>   <span class="o">=</span> <span class="s2">"STANDARD_IA"</span>
     <span class="p">}</span>
 
     <span class="nx">noncurrent_version_transition</span> <span class="p">{</span>
-      <span class="nx">noncurrent_days</span> <span class="p">=</span> <span class="mi">60</span>
-      <span class="nx">storage_class</span>   <span class="p">=</span> <span class="s2">"GLACIER"</span>
+      <span class="nx">noncurrent_days</span> <span class="o">=</span> <span class="mi">60</span>
+      <span class="nx">storage_class</span>   <span class="o">=</span> <span class="s2">"GLACIER"</span>
     <span class="p">}</span>
 
-    <span class="nx">status</span> <span class="p">=</span> <span class="s2">"Enabled"</span>
+    <span class="nx">status</span> <span class="o">=</span> <span class="s2">"Enabled"</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <h3 id="security">Security</h3> <p>Securing the objects in AWS S3 buckets is important. Some configurations to consider:</p> <ol> <li>Encryption.</li> <li>Public access block.</li> <li>Logging.</li> <li>Notifications.</li> <li>Metrics.</li> </ol> <p><strong>Encryption</strong> The option encrypts the S3 bucket and all objects inside the bucket. It is a good practice to enable this when creating the bucket to ensure all current and future objects are encrypted.</p> <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-encryption-faq.html">Related AWS Doc.</a></p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_kms_key"</span> <span class="s2">"mykey"</span> <span class="p">{</span>
-  <span class="nx">description</span>             <span class="p">=</span> <span class="s2">"This key is used to encrypt bucket objects"</span>
-  <span class="nx">deletion_window_in_days</span> <span class="p">=</span> <span class="mi">10</span>
+  <span class="nx">description</span>             <span class="o">=</span> <span class="s2">"This key is used to encrypt bucket objects"</span>
+  <span class="nx">deletion_window_in_days</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"mybucket"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"mybucket"</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"mybucket"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket_server_side_encryption_configuration"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">mybucket</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">mybucket</span><span class="p">.</span><span class="nx">id</span>
 
   <span class="nx">rule</span> <span class="p">{</span>
     <span class="nx">apply_server_side_encryption_by_default</span> <span class="p">{</span>
-      <span class="nx">kms_master_key_id</span> <span class="p">=</span> <span class="nx">aws_kms_key</span><span class="p">.</span><span class="nx">mykey</span><span class="p">.</span><span class="nx">arn</span>
-      <span class="nx">sse_algorithm</span>     <span class="p">=</span> <span class="s2">"aws:kms"</span>
+      <span class="nx">kms_master_key_id</span> <span class="o">=</span> <span class="nx">aws_kms_key</span><span class="p">.</span><span class="nx">mykey</span><span class="p">.</span><span class="nx">arn</span>
+      <span class="nx">sse_algorithm</span>     <span class="o">=</span> <span class="s2">"aws:kms"</span>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <p><strong>Public access block</strong> AWS recommends blocking public access of S3 objects, especially when dealing with sensitive data. It also recommends setting all 4 options to true (see below).</p> <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.htmls">Related AWS Doc.</a></p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"example"</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"example"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket_public_access_block"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
 
-  <span class="nx">block_public_acls</span>       <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">block_public_policy</span>     <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">ignore_public_acls</span>      <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">restrict_public_buckets</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">block_public_acls</span>       <span class="o">=</span> <span class="kc">true</span>
+  <span class="nx">block_public_policy</span>     <span class="o">=</span> <span class="kc">true</span>
+  <span class="nx">ignore_public_acls</span>      <span class="o">=</span> <span class="kc">true</span>
+  <span class="nx">restrict_public_buckets</span> <span class="o">=</span> <span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <p><strong>Logging</strong> Allows logging of all access requests to the S3 bucket. The logs are stored in a separate S3 bucket, with appropriate permissions.</p> <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html">Related AWS Doc.</a></p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"my-tf-example-bucket"</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"my-tf-example-bucket"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket_acl"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
-  <span class="nx">acl</span>    <span class="p">=</span> <span class="s2">"private"</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">acl</span>    <span class="o">=</span> <span class="s2">"private"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"log_bucket"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"my-tf-log-bucket"</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"my-tf-log-bucket"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket_acl"</span> <span class="s2">"log_bucket_acl"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">log_bucket</span><span class="p">.</span><span class="nx">id</span>
-  <span class="nx">acl</span>    <span class="p">=</span> <span class="s2">"log-delivery-write"</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">log_bucket</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">acl</span>    <span class="o">=</span> <span class="s2">"log-delivery-write"</span>
 <span class="p">}</span>
 
 <span class="k">resource</span> <span class="s2">"aws_s3_bucket_logging"</span> <span class="s2">"example"</span> <span class="p">{</span>
-  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
 
-  <span class="nx">target_bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">log_bucket</span><span class="p">.</span><span class="nx">id</span>
-  <span class="nx">target_prefix</span> <span class="p">=</span> <span class="s2">"log/"</span>
+  <span class="nx">target_bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">log_bucket</span><span class="p">.</span><span class="nx">id</span>
+  <span class="nx">target_prefix</span> <span class="o">=</span> <span class="s2">"log/"</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <p><strong>Notifications</strong> AWS SNS can be enabled for an S3 bucket to be notified when specified events occur.</p> <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html">Related AWS Doc.</a></p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">data</span> <span class="s2">"aws_iam_policy_document"</span> <span class="s2">"topic"</span> <span class="p">{</span>
     <span class="nx">statement</span> <span class="p">{</span>
-      <span class="nx">effect</span> <span class="p">=</span> <span class="s2">"Allow"</span>
+      <span class="nx">effect</span> <span class="o">=</span> <span class="s2">"Allow"</span>
 
       <span class="nx">principals</span> <span class="p">{</span>
-        <span class="nx">type</span>        <span class="p">=</span> <span class="s2">"Service"</span>
-        <span class="nx">identifiers</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"s3.amazonaws.com"</span><span class="p">]</span>
+        <span class="nx">type</span>        <span class="o">=</span> <span class="s2">"Service"</span>
+        <span class="nx">identifiers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"s3.amazonaws.com"</span><span class="p">]</span>
       <span class="p">}</span>
 
-      <span class="nx">actions</span>   <span class="p">=</span> <span class="p">[</span><span class="s2">"SNS:Publish"</span><span class="p">]</span>
-      <span class="nx">resources</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"arn:aws:sns:*:*:s3-event-notification-topic"</span><span class="p">]</span>
+      <span class="nx">actions</span>   <span class="o">=</span> <span class="p">[</span><span class="s2">"SNS:Publish"</span><span class="p">]</span>
+      <span class="nx">resources</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"arn:aws:sns:*:*:s3-event-notification-topic"</span><span class="p">]</span>
 
       <span class="nx">condition</span> <span class="p">{</span>
-        <span class="nx">test</span>     <span class="p">=</span> <span class="s2">"ArnLike"</span>
-        <span class="k">variable</span> <span class="p">=</span> <span class="s2">"aws:SourceArn"</span>
-        <span class="nx">values</span>   <span class="p">=</span> <span class="p">[</span><span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">arn</span><span class="p">]</span>
+        <span class="nx">test</span>     <span class="o">=</span> <span class="s2">"ArnLike"</span>
+        <span class="k">variable</span> <span class="o">=</span> <span class="s2">"aws:SourceArn"</span>
+        <span class="nx">values</span>   <span class="o">=</span> <span class="p">[</span><span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">arn</span><span class="p">]</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
   <span class="k">resource</span> <span class="s2">"aws_sns_topic"</span> <span class="s2">"topic"</span> <span class="p">{</span>
-    <span class="nx">name</span>   <span class="p">=</span> <span class="s2">"s3-event-notification-topic"</span>
-    <span class="nx">policy</span> <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_iam_policy_document</span><span class="p">.</span><span class="nx">topic</span><span class="p">.</span><span class="nx">json</span>
+    <span class="nx">name</span>   <span class="o">=</span> <span class="s2">"s3-event-notification-topic"</span>
+    <span class="nx">policy</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">aws_iam_policy_document</span><span class="p">.</span><span class="nx">topic</span><span class="p">.</span><span class="nx">json</span>
   <span class="p">}</span>
 
   <span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"bucket"</span> <span class="p">{</span>
-    <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"your-bucket-name"</span>
+    <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"your-bucket-name"</span>
   <span class="p">}</span>
 
   <span class="k">resource</span> <span class="s2">"aws_s3_bucket_notification"</span> <span class="s2">"bucket_notification"</span> <span class="p">{</span>
-    <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">id</span>
+    <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">id</span>
 
     <span class="nx">topic</span> <span class="p">{</span>
-      <span class="nx">topic_arn</span>     <span class="p">=</span> <span class="nx">aws_sns_topic</span><span class="p">.</span><span class="nx">topic</span><span class="p">.</span><span class="nx">arn</span>
-      <span class="nx">events</span>        <span class="p">=</span> <span class="p">[</span><span class="s2">"s3:ObjectCreated:*"</span><span class="p">]</span>
-      <span class="nx">filter_suffix</span> <span class="p">=</span> <span class="s2">".log"</span>
+      <span class="nx">topic_arn</span>     <span class="o">=</span> <span class="nx">aws_sns_topic</span><span class="p">.</span><span class="nx">topic</span><span class="p">.</span><span class="nx">arn</span>
+      <span class="nx">events</span>        <span class="o">=</span> <span class="p">[</span><span class="s2">"s3:ObjectCreated:*"</span><span class="p">]</span>
+      <span class="nx">filter_suffix</span> <span class="o">=</span> <span class="s2">".log"</span>
     <span class="p">}</span>
   <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <p><strong>Metrics</strong> Monitors and records overall metrics related to the S3 bucket. Can be customized to monitor the entire bucket or can be set to specific filters.</p> <p><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/metrics-configurations.html">Related AWS Doc.</a></p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1"># For the entire S3 bucket</span>
   <span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"example"</span> <span class="p">{</span>
-    <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"example"</span>
+    <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"example"</span>
   <span class="p">}</span>
 
   <span class="k">resource</span> <span class="s2">"aws_s3_bucket_metric"</span> <span class="s2">"example-entire-bucket"</span> <span class="p">{</span>
-    <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
-    <span class="nx">name</span>   <span class="p">=</span> <span class="s2">"EntireBucket"</span>
+    <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+    <span class="nx">name</span>   <span class="o">=</span> <span class="s2">"EntireBucket"</span>
   <span class="p">}</span>
 
   <span class="c1"># With filters</span>
   <span class="k">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"example"</span> <span class="p">{</span>
-    <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"example"</span>
+    <span class="nx">bucket</span> <span class="o">=</span> <span class="s2">"example"</span>
   <span class="p">}</span>
 
   <span class="k">resource</span> <span class="s2">"aws_s3_bucket_metric"</span> <span class="s2">"example-filtered"</span> <span class="p">{</span>
-    <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
-    <span class="nx">name</span>   <span class="p">=</span> <span class="s2">"ImportantBlueDocuments"</span>
+    <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">id</span>
+    <span class="nx">name</span>   <span class="o">=</span> <span class="s2">"ImportantBlueDocuments"</span>
 
     <span class="nx">filter</span> <span class="p">{</span>
-      <span class="nx">prefix</span> <span class="p">=</span> <span class="s2">"documents/"</span>
+      <span class="nx">prefix</span> <span class="o">=</span> <span class="s2">"documents/"</span>
 
-      <span class="nx">tags</span> <span class="p">=</span> <span class="p">{</span>
-        <span class="nx">priority</span> <span class="p">=</span> <span class="s2">"high"</span>
-        <span class="nx">class</span>    <span class="p">=</span> <span class="s2">"blue"</span>
+      <span class="nx">tags</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">priority</span> <span class="o">=</span> <span class="s2">"high"</span>
+        <span class="nx">class</span>    <span class="o">=</span> <span class="s2">"blue"</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <h3 id="cost-planning-and-optimization">Cost planning and optimization</h3> <p>It is important to keep an eye on costs, especially when handling Terabytes or Petabytes of data in your Data Lake. The first step to manage costs is to monitor it. One of the many ways to monitor costs in AWS is the <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html">AWS Cost Explorer</a> service. Please note that there is a nominal cost to make API calls to the CE service.</p> <p>Terraform allows defining some options to define Cost Explorer resources:</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_ce_anomaly_monitor"</span> <span class="s2">"service_monitor"</span> <span class="p">{</span>
-  <span class="nx">name</span>              <span class="p">=</span> <span class="s2">"AWSServiceMonitor"</span>
-  <span class="nx">monitor_type</span>      <span class="p">=</span> <span class="s2">"DIMENSIONAL"</span>
-  <span class="nx">monitor_dimension</span> <span class="p">=</span> <span class="s2">"SERVICE"</span>
+  <span class="nx">name</span>              <span class="o">=</span> <span class="s2">"AWSServiceMonitor"</span>
+  <span class="nx">monitor_type</span>      <span class="o">=</span> <span class="s2">"DIMENSIONAL"</span>
+  <span class="nx">monitor_dimension</span> <span class="o">=</span> <span class="s2">"SERVICE"</span>
 <span class="p">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <p>Another alternative to view your spending is the comprehensive AWS <a href="https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html">Cost and Usage report</a>. This service allows sending data in CSV format to an S3 bucket from which you can visualize the cost data via one of the available <a href="https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html#download-cur">AWS reporting services</a>.</p> <p>Defining a Cost and Usage report resource via Terraform:</p> <div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_cur_report_definition"</span> <span class="s2">"example_cur_report_definition"</span> <span class="p">{</span>
-  <span class="nx">report_name</span>                <span class="p">=</span> <span class="s2">"example-cur-report-definition"</span>
-  <span class="nx">time_unit</span>                  <span class="p">=</span> <span class="s2">"HOURLY"</span>
-  <span class="nx">format</span>                     <span class="p">=</span> <span class="s2">"textORcsv"</span>
-  <span class="nx">compression</span>                <span class="p">=</span> <span class="s2">"GZIP"</span>
-  <span class="nx">additional_schema_elements</span> <span class="p">=</span> <span class="p">[</span><span class="s2">"RESOURCES"</span><span class="p">,</span> <span class="s2">"SPLIT_COST_ALLOCATION_DATA"</span><span class="p">]</span>
-  <span class="nx">s3_bucket</span>                  <span class="p">=</span> <span class="s2">"example-bucket-name"</span>
-  <span class="nx">s3_region</span>                  <span class="p">=</span> <span class="s2">"us-east-1"</span>
-  <span class="nx">additional_artifacts</span>       <span class="p">=</span> <span class="p">[</span><span class="s2">"REDSHIFT"</span><span class="p">,</span> <span class="s2">"QUICKSIGHT"</span><span class="p">]</span>
-<span class="p">}</span>
+  <span class="nx">report_name</span>                <span class="o">=</span> <span class="s2">"example-cur-report-definition"</span>
+  <span class="nx">time_unit</span>                  <span class="o">=</span> <span class="s2">"HOURLY"</span>
+  <span class="nx">format</span>                     <span class="o">=</span> <span class="s2">"textORcsv"</span>
+  <span class="nx">compression</span>                <span class="o">=</span> <span class="s2">"GZIP"</span>
+  <span class="nx">additional_schema_elements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"RESOURCES"</span><span class="p">,</span> <span class="s2">"SPLIT_COST_ALLOCATION_DATA"</span><span class="p">]</span>
+  <span class="nx">s3_bucket</span>                  <span class="o">=</span> <span class="s2">"example-bucket-name"</span>
+  <span class="nx">s3_region</span>                  <span class="o">=</span> <span class="s2">"us-east-1"</span>
+  <span class="nx">additional_artifacts</span>       <span class="o">=</span> <span class="p">[</span><span class="s2">"REDSHIFT"</span><span class="p">,</span> <span class="s2">"QUICKSIGHT"</span><span class="p">]</span>
+<span class="err">}</span>
 </code></pre></div></div> <p><cite>– Terraform Docs.</cite></p> <p>Another way to reduce data transfer and networking costs is to keep the data closer to its source when building the data lake.</p> <p>Some options:</p> <ul> <li>Storing the data in an AWS S3 bucket belonging to the same region as the data sources.</li> <li>Analyzing data in the same region and then sending only relevant data (such as as summaries or reports etc.) across different AWS regions.</li> </ul> <p>Each service in AWS has its own pricing, so it important to note them and use them accordingly.</p> <h1 id="etl">ETL</h1> <p>There are several ETL options (both <a href="https://projects.apache.org/projects.html?category#big-data">open source</a> and otherwise) when it comes to building pipelines for a data lake.</p> <p>This largely depends on the use case. You can build a simple Python pipeline, or use an off-the-shelf ETL product or use one of the big data projects.</p> <p>When the data volume is large, the choice for a typical data lake is Apache Spark or Apache Flink.</p> <h2 id="batch-vs-streaming">Batch vs. Streaming</h2> <p>Again, this depends on the latency you can afford with respect to the data arriving to the data lake. If a latency is tolerable and can consume all of the data between a certain time interval, batch workflows are fine. If the data volume is large or is expected to grow over time, a streaming workflow is desirable.</p> <p>If you want near-realtime latency, again, a streaming pipeline is required.</p> <p><strong>Some design considerations:</strong></p> <ul> <li>How much latency is tolerable?</li> <li>What is your current and projected data volume? (What will be the volume in 6 months, 1 year, 5 years etc.?)</li> <li>How are you handling error records? Are they required to be reprocessed?</li> <li>How fault tolerant is your pipeline? How will the pipeline start if there is a failure? (Consume all available data again or maintain destination checkpoints). Is a restart automatic? How many times do you retry? Are there notifications about failures?</li> <li>Are you accounting for permanent data loss if you are reading from a streaming services like Kinesis? (What happens if your pipeline is not restarted beyond the retention timeline of the streaming service?)</li> <li>Are you handling de-duplication automatically?</li> <li>Are you implementing monitoring and alerting?</li> <li>Are you balancing costs vs. accuracy of the data?</li> </ul> <h1 id="monitoring-and-alerting">Monitoring and Alerting</h1> <p>It is very important for any data pipeline to maintain proper monitoring and alerting. This allows timely intervention when there are problems with the pipelines. It also allows us to preempt what could become a larger problem later on.</p> <p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html">AWS Cloudwatch</a> is amongst the best options available for monitoring services in AWS because it allows sending logs from any service and also allows different log storage and notification mechanisms.</p> <p>AWS also has a robust <a href="https://registry.terraform.io/modules/terraform-aws-modules/cloudwatch/aws/latest">Terraform module</a> to create and manage Cloudwatch resources. <a href="https://github.com/terraform-aws-modules/terraform-aws-cloudwatch/tree/master/examples/complete-log-metric-filter-and-alarm">Example metric filter and alarm.</a></p> <h1 id="analytics">Analytics</h1> <p>So far, we have discussed data sources, ingestion, ETL and related topics. Now, we will discuss analytics on a data lake built on AWS.</p> <p><strong>Design considerations:</strong></p> <ul> <li>What is the primary use case of analytics? Examples: downstream data transformation (ETL), data enrichment to suit certain use cases, data visualization, ML, SQL/queries powering other downstream storage or dashboards etc.</li> <li>Metadata management, data catalogs.</li> <li>Governance - accuracy of data, profiling, completeness.</li> <li>Notifications - data delays, gaps, other anomalies.</li> </ul> <p>AWS contains a <a href="https://aws.amazon.com/big-data/datalakes-and-analytics/">plethora of services</a> catering to all of the above analytics use cases and design choices.</p> <div class="row mt-3"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/s3-analytics-480.webp"/> <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/s3-analytics-800.webp"/> <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/s3-analytics-1400.webp"/> <img src="/assets/img/s3-analytics.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p>Some examples:</p> <ul> <li><strong>Athena</strong> allows you to directly query S3 buckets using SQL.</li> <li><strong>Redshift</strong> allows you to maintain structured data for datawarehousing and combines both storage and compute.</li> <li><strong>Quicksight</strong> offers visualization. <strong>Tableau</strong> can be integrated with AWS and can be used for visualization use cases as well.</li> <li><strong>DataZone</strong> for governance.</li> <li><strong>Glue</strong> - serverless ETL, data catalog, interactive Python, PySpark notebooks, Cloudwatch integration, Data Quality, data cleansing.</li> </ul> <h1 id="conclusion">Conclusion</h1> <p>This article was an attempt to provide a reference to various AWS services to design and build a scalable, performant and cost-efficient data lake.</p> <p>These services keep getting updated with newer features from time to time, so the latest AWS documentation will give more information related to them.</p> <p>Each data lake effort has a variety of parameters such as available time, people in a team/organization, skills of the team, short term and long term goals for the project, users of the data lake, maintenance effort, operations and so on. It is important to keep these in mind while deciding on design, architecture and implementation.</p>]]></content><author><name></name></author><category term="bigdata"/><category term="aws"/><category term="data-engineering"/><category term="scala"/><summary type="html"><![CDATA[Building and deploying a data lake on AWS infrastructure.]]></summary></entry><entry><title type="html">Deploying on-premise big data pipelines.</title><link href="http://harishkesavarao.github.io//blog/2019/on-prem-bd/" rel="alternate" type="text/html" title="Deploying on-premise big data pipelines."/><published>2019-11-23T08:18:00+00:00</published><updated>2019-11-23T08:18:00+00:00</updated><id>http://harishkesavarao.github.io//blog/2019/on-prem-bd</id><content type="html" xml:base="http://harishkesavarao.github.io//blog/2019/on-prem-bd/"><![CDATA[<h1 id="introduction">Introduction</h1> <p>This post is about a big data deployment we (myself and a few others in my company) did a few years ago. This was a time when only a few companies were cloud-first. Some of them hadn’t ventured into the cloud at all and cloud adoption (mainly AWS at the time) was divided into part on-premise/part cloud to completely on-premise.</p> <p>This makes for some interesting choices for the tech stack. For instance, compute and storage had to be carefully managed. Permissions had to be manually handled as well.</p> <h1 id="use-case-and-background">Use case and background</h1> <p>Prior to this exercise, most of our datawarehouse was on Postgres (again an on-premise deployment). That worked for a few years until the data volume grew from GB/week or month to TB/month or GB/day or week. We had to start exploring alternatives which were:</p> <ol> <li>Scalable.</li> <li>Maintainable.</li> <li>Performant for the volume of data.</li> <li>Aligned with the overall stack being used by the company at the time.</li> <li>Proven to be effective via a Proof Of Concept.</li> </ol> <p>After exploring many such alternatives and discussions with teams having similar use cases, we decided on the following:</p> <h1 id="tech-stack">Tech stack</h1> <p><em>Almost</em> all the tools/technology used are Open Source, except the Hadoop cluster, deployed via Cloudera.</p> <table> <thead> <tr> <th>Area</th> <th>Tools/technology</th> </tr> </thead> <tbody> <tr> <td>Compute</td> <td>Hadoop</td> </tr> <tr> <td>Storage</td> <td>HDFS</td> </tr> <tr> <td>Orchestration, workflow management</td> <td>Apache Airflow</td> </tr> <tr> <td>Containerization</td> <td>Docker (published to GitLab container registry)</td> </tr> <tr> <td>Programming Language</td> <td>Python 2.7 at the time and later 3.x, PySpark</td> </tr> <tr> <td>Analytics/data presentation layer</td> <td>Presto on Apache Hive with Spark compute (wrapper on Apache Hive)</td> </tr> <tr> <td>CI/CD</td> <td>Custom-built Airflow operators</td> </tr> </tbody> </table> <h1 id="architecture">Architecture</h1> <p>The diagram below shows an overall architecture. We had two data sources, both of them housing fairly large amount of data - in the order of gigabytes per week to petabytes on a monthly basis.</p> <div class="row mt-3"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/on-prem-bd-480.webp"/> <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/on-prem-bd-800.webp"/> <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/on-prem-bd-1400.webp"/> <img src="/assets/img/on-prem-bd.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <h1 id="implementation">Implementation</h1> <p>The implementation contains the following components:</p> <p>From a <strong>Data Engineering</strong> perspective:</p> <ul> <li>Reading from the data sources.</li> <li>Transforming the data.</li> <li>Creating appropriate destination data structures (Apache Hive tables).</li> <li>Loading the data.</li> <li>Backfills, fault tolerance of the data pipeline.</li> <li>Alerting - for workflow/job failures or upstream dependency problems.</li> </ul> <p>From a <strong>Data Infrastructure</strong> perspective:</p> <ul> <li>Managing code versions.</li> <li>Handling dependencies (and its versions) required for the code to run.</li> <li>Deploying code changes.</li> <li>Permissions.</li> </ul> <h1 id="design-decisions">Design decisions</h1> <h2 id="programming-language">Programming Language</h2> <blockquote> <p>Python/PySpark.</p> </blockquote> <p>Spark API is available in 4 langauges: Scala, Python, Java, R. Of these, Scala and Python were the top contenders, since Java was a new language for our tech stack and offered little unique advantages compared to Python and Scala.</p> <p>The trade-offs between Scala and Python:</p> <ul> <li><strong>Spark performance:</strong> - although Spark offers APIS in Python and Scala, the initial versions of the Python API was not as performant as the Scala API. However, later versions of the Python API caught up with the Scala API’s performance.</li> <li><strong>Ease of use:</strong> Did we have enough knowledge within the team to use Scala comfortably? Is it worth maintaining one project in Scala whilst all the other projects have historically been in Python?</li> <li><strong>Maintenance:</strong> How easy is it to maintain code? How are dependencies managed?</li> <li><strong>Learning curve with Scala</strong> - since Python was our primary language, some of us had to pick up Scala as new programming language, which added to the complexity.</li> </ul> <p>To explore the above items, we performed small Proof Of Concept exercises, such as:</p> <ul> <li>Benchmarking API performance between Scala and Python.</li> <li>Building dependencies in Scala using sbt vs. pip in Python.</li> </ul> <h2 id="orchestration-and-workflow-management">Orchestration and workflow management</h2> <blockquote> <p>Apache Airflow</p> </blockquote> <p>Task management, scheduling and other actions had to be managed. Apache Airflow, hosted with a Postgres backend was already available. We chose to use it.</p> <p>Airflow did not have all the operators we required. So, we ended up writing custom operators for the following:</p> <ul> <li>Python (running Python scripts)</li> <li>Apache Hive (running queries on Apache Hive)</li> <li>Shell operator (executing bash or other shell commands)</li> <li>Docker operator (running Docker commands)</li> </ul> <h2 id="analytics">Analytics</h2> <blockquote> <p>Apache Hive/Presto</p> </blockquote> <p>Thinking beyond the data pipelines, the decisions related to data consumption came about.</p> <p>Some options were:</p> <ul> <li>Apache Hive -&gt; Postgres -&gt; Tableau/Queries/Jupyter notebooks.</li> <li>Apache Hive -&gt; Presto -&gt; Tableau(using Presto connector)/Jupyter notebooks.</li> </ul> <h2 id="file-formats">File formats</h2> <blockquote> <p>Parquet.</p> </blockquote> <p>Options:</p> <ul> <li>JSON.</li> <li>CSV.</li> <li>Parquet.</li> <li>ORC.</li> </ul> <p><strong><em>Reasons:</em></strong> Compression options, schema evolution, partition discovery, columnar storage and encryption and overall better performance.</p> <h2 id="compute">Compute</h2> <p>A shared Hadoop cluster was already available and only permissions had to be created to access the cluster.</p> <h2 id="storage">Storage</h2> <p>Straightforward HDFS storage with a Apache Hive metastore. We created a new Apache Hive metastore for our project since the entire storage was shared.</p> <h2 id="cicd">CI/CD</h2> <p>We used GitLab for the following:</p> <ol> <li>Code versions.</li> <li>Publishing docker image versions to GitLab container registry.</li> <li>Running pytest checks.</li> </ol> <h2 id="consumption-and-analytics">Consumption and analytics</h2> <p>Now that we have discussed the ingestion pipeline, the next step is making the datasets available for users.</p> <p>Since we are dealing with large data volumes, querying Apache Hive directly wasn’t scalable (via Presto). We used Presto on Spark.</p> <p>Analytics was done on a Jupyter notebook, so the query results were used to build visualizations.</p> <p>Analytics teams built their own DAGs using the datasets we created.</p> <h1 id="learning">Learning</h1> <h2 id="performance">Performance</h2> <p>The Hadoop cluster was performant to ingest data at the rate we expected. The query response time was dependent on the partitioning of the Apache Hive table.</p> <h2 id="improvements">Improvements</h2> <h3 id="some-future-improvements">Some future improvements:</h3> <ul> <li>Managing Python dependencies/packaging better using npm.</li> <li>Creating leaner docker images to improve deployment times.</li> <li>Moving away from Apache Hive (see the section on Moving to the cloud).</li> </ul> <h2 id="moving-to-the-cloud">Moving to the cloud</h2> <p>When the migration to the cloud was started, the following changes were made to the architecture:</p> <table> <thead> <tr> <th>Type</th> <th>On-premise</th> <th>Cloud</th> </tr> </thead> <tbody> <tr> <td>Query Engine</td> <td>Hive</td> <td>Snowflake</td> </tr> <tr> <td>Storage</td> <td>HDFS</td> <td>AWS S3</td> </tr> <tr> <td>Compute</td> <td>Hadoop</td> <td>AWS EMR, EC2</td> </tr> <tr> <td>CI/CD</td> <td>Gitlab CI</td> <td>AWS Codebuild</td> </tr> <tr> <td>Docker registry</td> <td>GitLab container registry</td> <td>AWS ECR</td> </tr> <tr> <td>Orchestration, workflow management</td> <td>Apache Airflow</td> <td>Amazon Managed Workflows for Apache Airflow (MWAA)</td> </tr> <tr> <td>Permissions</td> <td>Manual</td> <td>AWS IAM</td> </tr> </tbody> </table> <hr/> <h1 id="conclusion">Conclusion</h1> <p>Overall, the project helped us foray into the big data area and keep up with current and future data needs of the organization.</p> <p>The cloud allowed us to scale and automate many of the steps for development, deployment and maintenance.</p>]]></content><author><name></name></author><category term="bigdata"/><category term="data-engineering"/><category term="hive"/><category term="airflow"/><category term="python"/><summary type="html"><![CDATA[Deploying big data pipelines in an on-premise Hadoop cluster.]]></summary></entry></feed>
