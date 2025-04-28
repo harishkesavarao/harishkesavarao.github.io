@@ -19,10 +19,13 @@ latest_posts: true  # includes a list of the newest posts
 social: true  # includes social icons at the bottom of the page
 ---
 
-**Principal Data Engineer & Data Architect** @  [Atlassian](https://www.atlassian.com/blog/atlassian-engineering) \
-**Previously: Data Engineering** @ [Databricks](https://www.databricks.com/), [Amazon](https://www.primevideotech.com/our-innovation), [Indeed](https://engineering.indeedblog.com/blog/2018/10/imhotep-scalable-efficient-and-fast/), [Informatica](https://www.informatica.com/)
+Hello, I am Harish, a Data Engineering & Cloud Data Infrastructure professional. 
 
-Hello, I am a Principal Data Engineer & Data Architect for the Data Engineering organization at Altassian. 
+I hold a Masters Degree from the [University of Arizona's Eller College of Management](https://eller.arizona.edu/programs/masters/mis/mis), majoring in Management Information Systems. It is the #2 ranked best public graduate information systems program per U.S. News & World Report 2025.
+
+**_Although I am located in India for the past year, almost all of my professional work experience (2012-2024) and my advanced education has been from the United States._**
+
+Currently, I am a Principal Data Engineer & Data Architect for the Data Engineering organization at [Altassian India]((https://www.atlassian.com/blog/atlassian-engineering)). 
 
 My most recent role, prior to Atlassian's was Staff Software Engineer and Data Engineering Team Lead for [Security](https://www.databricks.com/trust) at [Databricks](https://www.databricks.com/), where I was involved in overseeing the execution of multi-quarter Data Engineering projects, including design, automation and scaling of multi-TB/day data in [AWS](https://www.databricks.com/product/aws) and [Azure](https://azure.microsoft.com/en-us/products/databricks).
 
