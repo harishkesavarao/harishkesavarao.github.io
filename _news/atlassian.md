@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Joined Atlassian India as Principal Data Engineer & Data Architect. 
+_**[Update]**_ Joined Atlassian India as Principal Data Engineer & Data Architect. 
