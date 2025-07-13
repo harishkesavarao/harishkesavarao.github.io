@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Created the [Databricks Partition Sensor](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators/sql.html#databrickspartitionsensor) (for the Databricks Provider) for Apache Airflow.
+_**[Open Source]**_ Created the [Databricks Partition Sensor](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators/sql.html#databrickspartitionsensor) (for the Databricks Provider) for Apache Airflow.

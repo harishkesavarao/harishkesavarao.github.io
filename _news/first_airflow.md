@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-First major contribution to Apache Airflow -- [Databricks SQL Sensor for Airflow](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators/sql.html#databrickssqlsensor). :sparkles:
+_**[Open Source]**_ First major contribution to Apache Airflow -- [Databricks SQL Sensor for Airflow](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators/sql.html#databrickssqlsensor). :sparkles:
