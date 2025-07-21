@@ -25,7 +25,7 @@ I hold a Masters Degree from the [University of Arizona's Eller College of Manag
 
 **_Although I am located in India for the past year, almost all of my professional work experience (2012-2024) and my advanced education has been from the United States._**
 
-Currently, I am a Principal Data Engineer & Data Architect for the Data Engineering organization at [Altassian India]((https://www.atlassian.com/blog/atlassian-engineering)). 
+Currently, I am a Principal Data Engineer & Data Architect for the Data Engineering organization at [Atlassian India]((https://www.atlassian.com/blog/atlassian-engineering)). 
 
 My most recent role, prior to Atlassian's was Staff Software Engineer and Data Engineering Team Lead for [Security](https://www.databricks.com/trust) at [Databricks](https://www.databricks.com/), where I was involved in overseeing the execution of multi-quarter Data Engineering projects, including design, automation and scaling of multi-TB/day data in [AWS](https://www.databricks.com/product/aws) and [Azure](https://azure.microsoft.com/en-us/products/databricks).
 
