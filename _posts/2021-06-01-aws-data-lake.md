@@ -5,7 +5,7 @@ date: 2021-06-01 05:18:00
 description: Building and deploying a data lake on AWS infrastructure.
 related_posts: false
 tags: bigdata aws data-engineering scala
-featured: false
+featured: true
 toc: 
   beginning: true
 ---
