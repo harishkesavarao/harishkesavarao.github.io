@@ -18,28 +18,23 @@ latest_posts: true  # includes a list of the newest posts
 # selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
+Hello, thank you for visiting my page.
 
-Hello, I am Harish, a Data Engineering & Cloud Data Infrastructure professional. 
+I am Harish and I have been in the Data space for over a decade. Starting from an entry-level ETL developer in 2008, I progressed steadily in the field as the industry evolved.
 
-I hold a Masters Degree from the [University of Arizona's Eller College of Management](https://eller.arizona.edu/programs/masters/mis/mis), majoring in Management Information Systems. It is the #2 ranked best public graduate information systems program per U.S. News & World Report 2025.
+In 2010, I quit my job and enrolled in a Masters Degree in Management Information Systems at the University of Arizona's Eller College of Management. It is one of the best places to do Masters coursework focusing on Business Intelligence, Big Data and Machine Learning. It also ranks as the #1 public institution for Graduate studies in MIS in the US. Alongside my coursework, I also worked part-time as an ETL programmer for the Mining and Geological Engineering Department in my university, helping mining researchers save costs and optimize mining trucks' routes via data.
 
-**_Although I am located in India for the past year, almost all of my professional work experience (2012-2024) and my advanced education has been from the United States._**
+Post my graduation in 2012, I joined Informatica as a Presales Engineer and then moved onto become a Professional Services Engineer. This was in the traditional relational databases era.
 
-Currently, I am a Principal Data Engineer & Data Architect for the Data Engineering organization at [Atlassian India]((https://www.atlassian.com/blog/atlassian-engineering)). 
+Then in 2017, I moved onto become a Data Engineer at Indeed.com, allowing me to leverage my data engineering skills to power marketing, finance and product data marts to derive value for job seekers. I also got promoted to Senior Data Engineer. We used Postgres, Python and Airflow, and then moved onto Python, PySpark and Hadoop.
 
-My most recent role, prior to Atlassian's was Staff Software Engineer and Data Engineering Team Lead for [Security](https://www.databricks.com/trust) at [Databricks](https://www.databricks.com/), where I was involved in overseeing the execution of multi-quarter Data Engineering projects, including design, automation and scaling of multi-TB/day data in [AWS](https://www.databricks.com/product/aws) and [Azure](https://azure.microsoft.com/en-us/products/databricks).
+In 2020, I joined Amazon Prime Video as the first Data Engineer for the Prime Video Search division, where I single-handedly designed and delivered Proof-Of-Concept for a Data Lake on AWS. It was one of the most enriching experiences in my career to build a peta-byte scale Data Lake on AWS and solve some interesting search prediction challenges. The tech stack included PySpark, AWS.
 
-Earlier, I was in Senior Data Engineering(Individual Contributor) roles at [Salesforce's Tableau](https://engineering.tableau.com/), [Amazon's Prime Video](https://www.primevideotech.com/) and Indeed.com. In Amazon, I was hired as the first Data Engineer to help build a Data Lake for Prime Video Search. At [Indeed](https://engineering.indeedblog.com/blog/category/big-data/), I worked for Marketing, Sales and Finance to help build their datawarehouses. 
+In 2022, I joined Databricks as a Staff Data Infrastructure Engineer, and designed, implemented low-latency streaming pipelines to ingest data from a variety of APIs and other data sources in Databricks, AWS, Azure and Terraform (for Infra management).
 
-Prior to Indeed, I was in various roles are [Informatica](https://www.informatica.com/), focusing mainly on building ETL pipelines between relational databases and [MPP databases](https://www.sisense.com/glossary/mpp-database/).
+Currently, I am a Principal Data Engineer and Architect, helping Senior Data Engineers design and deliver projects for the Customer Support Services division of Atlassian. I also code everyday in Python, SQL, Databricks.
 
-My interests and key areas of work include: 
-* Understanding short-term & long-term data engineering requirements, converting them into high-level data architecture roadmaps for execution.
-* Designing, building and scaling big data pipelines to ingest large volume data via **Spark** and **AWS, Azure**. I also have experience deploying big data pipelines on-premise.
-* Performance tuning for high volume ingestion pipelines with **SparkStreaming / AWS Kinesis, Azure Eventhubs on Databricks**.
-* Automation of workflows (such as Apache Airflow and other equivalent tooling on the cloud), automated infrastructure management on the cloud using **Terraform (HCL)**.
-* Experience in configuring and deploying **Docker** containers for specialized use cases.
-* Extensive experience in writing Data Engineering code (primarily Python and Scala), adhering to good software engineering practices.
-* I also contribute to Open Source projects on a regular basis. I developed the first DAG Sensors for the Databricks Provider in **Apache Airflow**.
+I also contribute to Open Source projects and you can learn more it and also about me in my portfolio as well -- https://harishkesavarao.github.io/
+
 
 
