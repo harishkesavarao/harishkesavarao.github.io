@@ -36,5 +36,3 @@ Currently, I am a Principal Data Engineer and Architect, helping Senior Data Eng
 
 I also contribute to Open Source projects and you can learn more it and also about me in my portfolio as well -- https://harishkesavarao.github.io/
 
-
-
