@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Deploying Data Science applications - from a Data Engineer's perspective
-date: 2019-11-23 08:18:00
+date: 2025-12-29 08:18:00
 description: Thoughts and observations from a recent journey of deploying a Data Science pilot application
 related_posts: false
 tags: bigdata data-engineering hive airflow python data-science
