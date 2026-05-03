@@ -1,10 +1,11 @@
 ---
-layout: cv
-permalink: /cv/
+layout: page
 title: cv
+permalink: /cv/
 nav: true
 nav_order: 4
-# cv_pdf: Harish_Kesava_Rao_CV.pdf
-toc:
-  sidebar: left
 ---
+
+My full CV is available as a PDF.
+
+[Download CV (PDF)](/assets/pdf/Harish_Kesava_Rao_Resume.pdf){: .btn .btn-primary}
