@@ -1,23 +1,27 @@
 ---
 layout: page
 title: Open Source Contributions
-description: Contributions to OSS projects
+description: Active contributions to Apache Airflow, Delta Lake — focused on data infrastructure, observability, and provider tooling.
 importance: 2
 category: side-projects
 ---
 
-Periodically, I make Open Source contributions. It helps me expand my horizon into areas both broadly and deeply.
-
-### [Apache Airflow](https://github.com/apache/airflow)
-- [Added Databricks Partition Sensor](https://github.com/apache/airflow/pull/30980)
-- [Added Databricks SQL Sensor](https://github.com/apache/airflow/pull/30477)
-- [Google BigQuery and PubSub provider unit test fixes](https://github.com/apache/airflow/pull/22213)[^1]<br> 
-- [Google Sheets and Simple HTTP unit test fixes](https://github.com/apache/airflow/pull/22104)[^1]<br> 
-- [Fix malformed URI (Snowflake Connector for Airflow)](https://github.com/apache/airflow/pull/20509)[^1]<br>
+I contribute to open-source projects in the data engineering and AI/ML infrastructure space. Contributions span provider tooling, observability improvements, and platform compatibility fixes.
 
 
-### [Datahub](https://github.com/datahub-project/datahub?tab=readme-ov-file#datahub-the-data-discovery-platform-for-the-modern-data-stack)
+#### Apache Airflow
+##### Databricks provider, Google provider, Snowflake provider
 
-- [Make Airflow plugin compatible with version >= 2.7](https://github.com/datahub-project/datahub/issues/13357)
+[DatabricksPartitionSensor](https://github.com/apache/airflow/pull/30980) — authored and merged; enables partition-level sensing on Databricks tables for dependency management in Airflow DAGs
+[DatabricksSQLSensor](https://github.com/apache/airflow/pull/30477) — authored and merged; SQL-based sensing for Databricks workflows
+[Fix malformed URI](https://github.com/apache/airflow/pull/20509)† — Snowflake Connector
+Google BigQuery & PubSub provider [unit test fixes](https://github.com/apache/airflow/pull/22213)†
+Google Sheets & Simple HTTP [unit test fixes](https://github.com/apache/airflow/pull/22104)† 
 
-[^1]: Above contributions made using my other GitHub handle [@harishkrao](https://github.com/harishkrao)
+Note: contributions linked above marked with † were made under @harishkrao
+
+
+#### Delta Lake
+##### delta-io/delta
+
+Improved error observability in SnapshotManager.getLogSegmentForVersion — enhanced diagnostics for version resolution failures, making debugging significantly faster for users hitting log segment errors ([PR](https://github.com/delta-io/delta/pull/5329) approved, pending merge)
