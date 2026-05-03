@@ -169,6 +169,9 @@ collections:
   projects:
     output: true
     permalink: /projects/:path/
+  technical_notes:
+    output: true
+    permalink: /technical_notes/:path/
 
 announcements:
   enabled: true
