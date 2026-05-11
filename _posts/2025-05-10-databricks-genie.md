@@ -155,3 +155,11 @@ These instructions reduced the rate of ambiguous responses for question types wh
 Databricks AI/BI Genie is a system you build incrementally — validating, and expanding scope as the prompt matures. The accuracy is largely determined by the quality of the underlying data and metadata. It is also determined by how thoroughly the business area/domain is covered with example SQLs, explicit join specifications, and instructions.
 
 ---
+
+## Further reading
+
+**[Databricks AI/BI Demo Library](https://www.databricks.com/resources/demos/library?q=ai%2Fbi)**
+
+**[What are Compound AI Systems? — Databricks Blog](https://www.databricks.com/blog/what-are-compound-ai-systems)**
+
+**[The Shift from Models to Compound AI Systems — BAIR Blog](https://bair.berkeley.edu/blog/2024/02/18/compound-ai-systems/)**
