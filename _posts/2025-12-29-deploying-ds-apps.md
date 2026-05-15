@@ -42,7 +42,7 @@ This shift requires a Data Engineer to gain real context about what they are bui
 
 These are not questions a Data Engineer needs to answer at a research level. But understanding them well enough to make architecture decisions — which vector storage to use, how to design the chunking pipeline, what the right compute shape is for embedding generation at scale — is the prerequisite for doing the work well.
 
-This also required understanding what the Data Scientists already knew, so I could contribute the Data Engineering perspective without relitigating decisions that were already well-reasoned. The most useful framing: a Data Engineer's job in this collaboration is to educate Data Scientists on the nuances of production data engineering as it pertains to their use cases, agree on trade-offs and roadmap priorities together, and build the infrastructure that makes their work scale.
+This also required an understanding of what the Data Scientists already knew, so I could contribute to the Data Engineering perspective without revisiting decisions that were already well-reasoned. The key theme of the project: a Data Engineer's job in this collaboration is to educate Data Scientists on the nuances of production data engineering as it pertains to their use cases, agree on trade-offs and roadmap priorities together, and build the infrastructure that makes their work scale.
 
 ---
 
@@ -51,20 +51,17 @@ This also required understanding what the Data Scientists already knew, so I cou
 Before any technical work, both Data Engineers and Data Scientists need alignment on three questions:
 
 - Who are the customers, and what are they trying to do?
-- What problem are we actually solving — not the technical framing, 
-  the user's framing?
+- What problem are we actually solving — not just technologically, but the business value? 
 - What does "good enough" look like for the first version?
 
 Complicated problems do not necessarily need elaborate solutions. A closer look at the problem statement often reveals that it can be decomposed into smaller, prioritised use cases with clearer success criteria. Getting frequent and early feedback from both Data Scientists and business users — before the pipeline is complete — prevents building in the wrong 
-direction for months.
+direction for months. Also, it is possible that there are other users or teams trying to solve the same set of problems (technologically) or to unlock the same kinds of business value. Identifying them, collaborating with them to learn lessons and also to reduce redundancies and overlaps and to promote reusability is a valuable exercise.
 
-For semantic search and theming, the business question was: can a user describe what they are looking for in natural language and get relevant results back, without needing to know the exact terminology used in the underlying data? The technical complexity of embeddings and vector retrieval is in service of that one user need. Keeping the user need in focus is what prevents over-engineering.
+For semantic search and theming, the business question was: can a user describe what they are looking for in natural language and get relevant results back, without needing to know the exact terminology used in the underlying data? The technical complexity of embeddings and vector retrieval is in service of that one user need.
 
 ---
 
 ## What the Data Scientist needed vs. what production required
-
-This is the table neither discipline usually makes explicit — and making it explicit early is the single most effective way to prevent misaligned expectations.
 
 | Concern | Data Scientist's view | Data Engineer's view |
 |---|---|---|
@@ -76,15 +73,13 @@ This is the table neither discipline usually makes explicit — and making it ex
 | **Reproducibility** | "It worked on my machine" | Versioned Delta tables, tracked runs |
 | **Failure handling** | Exception visible in notebook | Alerting, dead-letter queues, pipeline resumability |
 
-Neither view is wrong — they reflect genuinely different optimisation targets. The notebook is right for exploration. The production pipeline is right for reliability. The collaboration is the process of explicitly negotiating every row in this table.
-
 ---
 
 ## Features and scalability
 
 ### The standard pipeline structure
 
-For any production data pipeline — whether analytics or ML — the structural considerations are consistent:
+For any production data pipeline — whether analytics or ML — these considerations are relevant:
 
 1. **Ingest** data at an agreed latency (batch, micro-batch, or streaming)
 2. **Transform** data to meet the use case's needs
@@ -131,18 +126,11 @@ df = (
 df.write.format("delta").mode("overwrite").save("/mnt/embeddings/billing")
 ```
 
-Two things to note in the after version: the UDF wraps the embedding 
-function so it runs distributed across the cluster, and the result is 
-written directly to Delta Lake rather than collected to the driver. 
-Collecting a large embedding dataset to the Spark driver is one of 
-the most common causes of out-of-memory failures in production.
+Two things to note in the production version: the UDF wraps the embedding function so it runs distributed across the cluster, and the result is written directly to Delta Lake rather than collected to the driver. Collecting a large embedding dataset to the Spark driver is one of the most common causes of out-of-memory failures in production.
 
 **Removing or converting print/display/show statements**
 
-Every `print()`, `display()`, or `show()` call in a Spark context 
-collects data to the driver. In a notebook, this is fine — the 
-dataset is small. In production, it is expensive and in some cases 
-causes driver OOM errors.
+Every `print()`, `display()`, or `show()` call in a Spark context collects data to the driver. In a notebook, this is fine — the dataset is small. In production, it is expensive and in some cases causes driver OOM errors.
 
 Replace with logging:
 
@@ -196,9 +184,7 @@ can be reprocessed without rerunning the entire historical load.
 
 **Statistics and profiling**
 
-Data profiling operations — row counts, null checks, distribution 
-summaries — are useful during development but expensive at scale. 
-Make them optional or conditional:
+Data profiling operations — row counts, null checks, distribution summaries — are useful during development but expensive at scale. Make them optional or conditional:
 
 ```python
 ENABLE_PROFILING = False  # set via config or environment variable
@@ -212,13 +198,9 @@ if ENABLE_PROFILING:
 
 ## API reliability
 
-ML pipelines typically call external APIs — embedding model endpoints, 
-LLM APIs, enrichment services. Notebooks call these once per cell and 
-fail fast. Production pipelines need to handle transient failures 
-gracefully.
+ML pipelines typically call external APIs — embedding model endpoints, LLM APIs, enrichment services. Notebooks call these once per cell and fail fast. Production pipelines need to handle transient failures gracefully.
 
-Implement retries with exponential backoff and explicit handling for 
-rate limit responses:
+Implement retries with exponential backoff and explicit handling for rate limit responses:
 
 ```python
 import time
@@ -265,8 +247,7 @@ Two details worth calling out: `respect_retry_after_header=True` honours the `Re
 
 ## The pipeline architecture
 
-The journey from notebook to production pipeline follows a consistent 
-arc:
+The journey from notebook to production pipeline follows a consistent path:
 
 ```mermaid
 graph LR
@@ -277,16 +258,16 @@ graph LR
     C --> F[Vector Storage\nembeddings · indexed]
 ```
 
-The collaboration between Data Engineers and Data Scientists is iterative across this arc — not a single handoff. Data Scientists validate that the refactored pipeline produces the same results as the notebook. Data Engineers validate that the pipeline meets production reliability and cost requirements. Several iterations are normal before both criteria are satisfied simultaneously.
+The collaboration between Data Engineers and Data Scientists is iterative across this path — not a single handoff. Data Scientists validate that the refactored pipeline produces the same results as the notebook. Data Engineers validate that the pipeline meets production reliability and cost requirements. Several iterations are normal before both criteria are satisfied simultaneously.
 
 ---
 
 ## Conclusion
 
-The hardest part of productionising a Data Science application is not the technical refactoring — it is the alignment on what "production-ready" means between two disciplines that have different definitions of the term.
+The hardest part of productionising a Data Science application is not the technical refactoring — it is the alignment on what "production-ready" means between the two disciplines that have different definitions of the term.
 
 For a Data Scientist, production-ready means the model works correctly. For a Data Engineer, production-ready means the 
 pipeline runs reliably at scale, fails gracefully, and can be maintained by someone other than the person who built it. 
-Both definitions are correct. Getting to a pipeline that satisfies both requires explicit negotiation — the table in this post is a useful starting point for that conversation.
+Both definitions are correct. Getting to a version that satisfies both requires trade-offs and some rounds of discussions — the table in this post is a useful starting point for that conversation.
 
-The good news: Data Engineers and Data Scientists solve complementary problems. The notebook provides the logic and the validated approach. The production pipeline provides the infrastructure that makes that approach work at scale. Neither is complete without the other.
+Data Engineers and Data Scientists solve complementary problems. The notebook provides the logic and the validated approach. The production pipeline provides the infrastructure that makes that approach work at scale. Neither is complete without the other.
