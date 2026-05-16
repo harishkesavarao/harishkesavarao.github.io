@@ -10,7 +10,7 @@ description: >
 
 A Data Scientist's notebook optimised for exploratory work on a small sample will often need significant rework before it can run reliably at production scale. This reflects a natural difference in priorities between DE and DS: notebooks favour iteration speed, while production pipelines prioritise reliability, scalability, and cost efficiency. Bridging that gap requires both disciplines to have a working understanding of each other's constraints.
 
-Recently, I partnered with Data Scientists to scale a Semantic Search and Theming application from an exploratory notebook to a production data pipeline. This post is an account of that journey — what I had to learn, what we had to align on, and the specific engineering changes that made the difference between a notebook and a pipeline.
+Recently, I partnered with Data Scientists to scale a Semantic Search and Theming application from an exploratory notebook to a production data pipeline. This post describes the journey — what I had to learn, what we had to align on, and how the code evolved from an experimental notebook to a production pipeline.
 
 ---
 
@@ -27,9 +27,9 @@ Recently, I partnered with Data Scientists to scale a Semantic Search and Themin
 
 ## Learning Data Science concepts
 
-Over the past few years, a Data Engineer's primary use case has evolved from pure analytics — for technical and business decision makers — to a combination of analytics and machine learning model support for Data Scientists and data analysts.
+Over the past few years, Data Engineering's primary use case has evolved from pure analytics — for technical and business decision makers — to a combination of analytics and machine learning model support for Data Scientists and data analysts.
 
-This shift requires a Data Engineer to gain real context about what they are building. For semantic search and theming specifically, the questions I needed to answer before I could contribute meaningfully were:
+This shift requires a Data Engineer to gain a deep understanding about what they are building. For semantic search and theming specifically, the questions I needed to answer before I could contribute meaningfully were:
 
 - What does semantic search actually do, and how is it different from 
   keyword search?
@@ -40,9 +40,9 @@ This shift requires a Data Engineer to gain real context about what they are bui
 - Which embedding models are appropriate for the kinds of text being 
   processed?
 
-These are not questions a Data Engineer needs to answer at a research level. But understanding them well enough to make architecture decisions — which vector storage to use, how to design the chunking pipeline, what the right compute shape is for embedding generation at scale — is the prerequisite for doing the work well.
+These are not questions a Data Engineer needs to answer at a research level. But understanding them well enough to make architecture decisions — which vector storage to use, how to design a chunking pipeline, what is the right compute type for generating embeddings at scale — is the prerequisite to ensure that the application works as intended for the user count and data volume in production.
 
-This also required an understanding of what the Data Scientists already knew, so I could contribute to the Data Engineering perspective without revisiting decisions that were already well-reasoned. The key theme of the project: a Data Engineer's job in this collaboration is to educate Data Scientists on the nuances of production data engineering as it pertains to their use cases, agree on trade-offs and roadmap priorities together, and build the infrastructure that makes their work scale.
+A Data Engineer's job in this collaboration is to educate Data Scientists on the nuances of production data engineering with regards to their use cases, agree on trade-offs and roadmap priorities together, and build the infrastructure that will scale their Search and Theming logic.
 
 ---
 
@@ -50,14 +50,15 @@ This also required an understanding of what the Data Scientists already knew, so
 
 Before any technical work, both Data Engineers and Data Scientists need alignment on three questions:
 
-- Who are the customers, and what are they trying to do?
-- What problem are we actually solving — not just technologically, but the business value? 
+- Who are the customers, and what are they trying to do with the data?
+- What problem are we actually solving — not just technologically, but the business value for the customers? 
 - What does "good enough" look like for the first version?
 
-Complicated problems do not necessarily need elaborate solutions. A closer look at the problem statement often reveals that it can be decomposed into smaller, prioritised use cases with clearer success criteria. Getting frequent and early feedback from both Data Scientists and business users — before the pipeline is complete — prevents building in the wrong 
-direction for months. Also, it is possible that there are other users or teams trying to solve the same set of problems (technologically) or to unlock the same kinds of business value. Identifying them, collaborating with them to learn lessons and also to reduce redundancies and overlaps and to promote reusability is a valuable exercise.
+Once we had answers to the above questions, we used it to formulate a problem statement. A closer look at the problem statement often reveals that it can be decomposed into smaller, prioritised use cases with clearer success criteria. Getting frequent and early feedback from both Data Scientists and business users — before the pipeline is complete — prevents the risk of building something that no one might be using in the future. 
 
-For semantic search and theming, the business question was: can a user describe what they are looking for in natural language and get relevant results back, without needing to know the exact terminology used in the underlying data? The technical complexity of embeddings and vector retrieval is in service of that one user need.
+Additionally, it is also possible that there are other users or teams trying to solve the same set of problems (technologically) or to unlock the same kinds of business value as us. Identifying such users or teams, collaborating with them to learn and share lessons and also to reduce redundancies and overlaps to promote reusability is a valuable exercise for an organization.
+
+For semantic search and theming, the business question was: can a user describe what they are looking for in natural language and get relevant and accurate results back, without needing to know the exact terminology used in the underlying data?
 
 ---
 
@@ -65,7 +66,7 @@ For semantic search and theming, the business question was: can a user describe 
 
 | Concern | Data Scientist's view | Data Engineer's view |
 |---|---|---|
-| **Data volume** | Sample dataset, fast iteration | Full historical load, chunked by date or attribute |
+| **Data volume** | Sample dataset or a subset of production data volumes, fast iteration | Full historical load, chunked by date or attribute |
 | **Compute** | Single-node pandas, local notebook | Distributed Spark, managed cluster |
 | **Output** | `print()` / visual inspection | Delta writes, data quality checks |
 | **Scheduling** | Manual runs | Airflow DAG with retries and backoff |
@@ -148,15 +149,11 @@ logger.info(f"Processed {row_count} records in embedding pipeline")
 logger.info(f"Embedding pipeline complete. Sample schema: {df.schema}")
 ```
 
-Logging statements should display pre-calculated results or perform 
-minimal actions on DataFrames. Avoid triggering new Spark actions 
-inside logging calls.
+Logging statements should display pre-calculated results or perform minimal actions on DataFrames. Avoid triggering new Spark actions inside logging calls.
 
 **Data chunking**
 
-As data volumes grow, processing everything in a single run becomes 
-impractical — both for compute cost and for pipeline resumability. 
-Chunk by date or another appropriate attribute:
+As data volumes grow, processing everything in a single run becomes impractical — both for compute cost and for pipeline resumability. Chunk by date or another appropriate attribute:
 
 ```python
 from datetime import date, timedelta
@@ -179,8 +176,7 @@ for chunk_start, chunk_end in get_date_chunks(start_date, end_date):
     process_and_write(chunk_df, chunk_start, chunk_end)
 ```
 
-Chunking also makes pipeline failures recoverable — a failed chunk 
-can be reprocessed without rerunning the entire historical load.
+Chunking also makes pipeline failures recoverable — a failed chunk can be reprocessed without rerunning the entire historical load.
 
 **Statistics and profiling**
 
@@ -211,13 +207,13 @@ from urllib3.util.retry import Retry
 def get_session_with_retries(
     retries: int = 3,
     backoff_factor: float = 2.0,
-    status_forcelist: tuple = (429, 500, 502, 503, 504),
+    statuses: tuple = (429, 500, 502, 503, 504),
 ) -> requests.Session:
     session = requests.Session()
     retry = Retry(
         total=retries,
         backoff_factor=backoff_factor,
-        status_forcelist=status_forcelist,
+        status_forcelist=statuses,
         respect_retry_after_header=True,  # honours 429 Retry-After headers
     )
     adapter = HTTPAdapter(max_retries=retry)
@@ -258,7 +254,7 @@ graph LR
     C --> F[Vector Storage\nembeddings · indexed]
 ```
 
-The collaboration between Data Engineers and Data Scientists is iterative across this path — not a single handoff. Data Scientists validate that the refactored pipeline produces the same results as the notebook. Data Engineers validate that the pipeline meets production reliability and cost requirements. Several iterations are normal before both criteria are satisfied simultaneously.
+The collaboration between Data Engineers and Data Scientists is iterative — not a single handoff. Data Scientists validate that the refactored pipeline produces the same results as the notebook. Data Engineers validate that the pipeline meets production reliability and cost requirements. Several iterations are normal before both criteria are satisfied simultaneously.
 
 ---
 
