@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-_**[Open Source]**_ [PR](https://github.com/delta-io/delta/pull/5329) approved: Improved error observability in `SnapshotManager.getLogSegmentForVersion` — [Delta Lake](https://github.com/delta-io/delta).
+***[Open Source]*** PR approved: [Improved error observability in `SnapshotManager.getLogSegmentForVersion`](https://github.com/delta-io/delta/pull/5329) — Delta Lake |
