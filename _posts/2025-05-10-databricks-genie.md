@@ -9,8 +9,7 @@ description: >
   and a direct review from the Databricks team.
 ---
 
-This post speaks about what it takes to  actually build a [Databricks Genie](https://www.databricks.com/blog/aibi-genie-now-generally-available) Space over production customer data in a data mesh architecture — from first configuration to a stable, production-ready Space used by business teams across Customer Support 
-and Customer Success.
+This post speaks about what it takes to  actually build a [Databricks Genie](https://www.databricks.com/blog/aibi-genie-now-generally-available) Space over production customer data in a data mesh architecture — from first configuration to a stable, production-ready Space used by business teams across domains.
 
 The timeline: two months from initial setup to opening access beyond a structured technical pilot. The audience: non-technical users who needed answers from data but had no SQL expertise.
 
