@@ -2,7 +2,7 @@
 layout: page
 title: projects
 permalink: /projects/
-description: Some of my side projects - during my time as a graduate student and during my free time.
+description: Open source contributions and side projects in data engineering and AI/ML infrastructure.
 nav: true
 nav_order: 2
 display_categories: [side-projects]
