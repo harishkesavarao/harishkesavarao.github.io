@@ -49,90 +49,110 @@ A well-governed lakehouse:
 
 Governance is baked into the architecture from the beginning, not retrofitted afterward.
 
-It also means the organisation is at some stage of a data maturity curve. In the early stages, the focus is on historical reporting — structured data, SQL queries, precanned dashboards. As maturity increases, teams add streaming data, ML workloads, predictive analytics. At the most mature end, organisations build AI systems that reason over their own data — RAG pipelines, agents, natural language interfaces. Each stage of that curve makes higher demands on the governance layer beneath it.
+It also means the organisation is at some stage of a data maturity curve.
+
+1. In the early stages, the focus is on historical reporting — structured data with batch loads, SQL queries, precanned dashboards.
+2. As maturity increases, teams add streaming data, ML workloads, predictive analytics.
+3. At the most mature end, organisations build AI systems that learn from their data and its surrounding metadata — RAG pipelines, agents, natural language interfaces.
+
+Each stage of that curve makes higher demands on the governance layer beneath it.
+
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/data-ai-maturity-curve.png" class="img-fluid rounded z-depth-1" zoomable=true %}
+        {% include figure.html path="assets/img/data-ai-maturity-curve.png" class="img-fluid rounded z-depth-1" zoomable=true caption="Image courtesy: Databricks"%}
     </div>
 </div>
-
 
 Let us walk through how that looks like in practice.
 
 ---
 
-## Layered architecture with clear contracts
+## Layered architecture with clear data contracts
 
-The Bronze / Silver / Gold pattern — Medallion architecture — is widely adopted but inconsistently implemented. The layers only work if each one has a clear contract: what data enters, in what form, with what guarantees, and what happens when those guarantees are violated.
+The Medallion architecture — the Bronze / Silver / Gold pattern is widely adopted across the industry.
 
-Bronze is raw. Exactly as received, append-only, with ingestion metadata. Silver is cleaned, conformed, and deduplicated. Gold is aggregated and optimised for consumption.
+- Bronze is raw data, which is stored exactly as it is received, is append-only, and contains ingestion metadata.
+- Silver is cleaned, conformed, and deduplicated data.
+- Gold is aggregated and optimised data, ready for consumption.
 
-The contract between Silver and Gold is where most teams are vague — and where most governance failures originate. If a Gold table is rebuilt from a Silver table that changed its schema without notice, every downstream consumer breaks silently. Clear contracts mean documented grain, documented SLAs, and a defined breaking-change policy. Not in a wiki that nobody reads — in the table metadata, enforced by the pipeline.
+However, the architecture is not effective if it is inconsistently implemented. The layers work only with a clear contract definition for each layer:
 
-One thing I would tell someone starting this from scratch: the layer boundaries feel like overhead in week one. By month six, they are the only thing keeping the platform coherent as the number of producers and consumers multiplies.
+- what data enters
+- in what form
+- with what guarantees
+  - what happens when those guarantees are violated.
+
+This is typically effective when enforced via a combination of process and system checks.
+
+In practice, the contract between the Silver and the Gold layers is where ambiguity typically sets in — and also where most governance failures can occur. Teams often debate upon what goes into which layer and what the contracts for the layers are. It is important to achieve a clear consensus early on and stick to it. If a Gold table is rebuilt from a Silver table whose schema was changed without notice, every downstream consumer breaks. Clear contracts mean documented grain, documented SLAs, and a defined breaking-change policy (most importantly involving Standard Operating Procedures around communication to all stakeholders).
+
+The layer boundaries might feel like overhead at the beginning. As the data platform matures, they ensure that the platform is consistently governed as the number of producers and consumers multiplies.
 
 ---
 
-## Naming things consistently across a large team
+## Global naming convention
 
-This sounds trivial. It is not.
-
-When ten teams are building pipelines independently, naming conventions diverge fast. A column called `customer_id` in one domain turns out to be a different entity from `customer_id` in another — same name, 
-different grain, different update cadence. Joins that look correct produce wrong results. Data quality checks pass. Reports diverge. Nobody knows why until someone traces it by hand.
+When several teams are building pipelines independently, naming conventions diverge over time. A column called `customer_id` in one domain turns out to be a different entity from `customer_id` in another — same name, different grain, different update cadence. Joins that look correct produce wrong results. Data quality checks pass and produce data inconsistency or corruption downstream. Reports diverge.
 
 The conventions that mattered most in practice: domain-prefixed table names, consistent use of surrogate versus natural keys across the platform, standardised date column naming (`created_at`, `updated_at`, 
-`effective_from`, `effective_to`), and agreed abbreviation rules for column names in YAML-defined data products.
+`effective_from`, `effective_to`), and agreed abbreviation rules for column names in data products.
 
-The last one is underrated. When data products are declared declaratively — schema, column descriptions, grain, SLAs — naming consistency becomes enforceable rather than advisory. Teams cannot easily drift from a standard that is codified in the data product specification.
+When data products are declared declaratively — schema, column descriptions, grain, SLAs — naming consistency becomes enforceable rather than advisory. Teams cannot easily drift from a standard that is codified in the data product specification.
+
+On a slightly different note, such problems are usually discovered by Data Quality checks at several points in the pipeline. If a team does not have such checks in place, these problems are reported by customers or business users, which results in delayed problem discovery, wrong decisions being made due to incorrect data and more such probelms. Identifying the source of the problem becomes a tedious task as well, since without the Data Quality checks, it is hard to know where the problem is originating.
 
 ---
 
 ## Domain ownership
 
-A central data team that owns every table in the lakehouse does not scale. Data mesh principles exist for a reason: the teams closest to the data understand it best, and ownership should reflect that. In practice, domain ownership means the team producing the data is responsible for its quality, its schema evolution, and its SLAs. The platform team provides the guardrails — Unity Catalog access policies, schema validation, lineage tracking — but does not own the data itself.
+It is not scalable to have a central data team own every table in the lakehouse. Data mesh principles guide such scenarios: the teams closest to the data understand it best, and should own not just the data, but the entire data lifecycle and its governance. In practice, this concept of domain ownership means the team producing the data is responsible for its quality, its schema evolution, and its SLAs. The platform team provides the guardrails — Unity Catalog access policies, schema validation, lineage tracking and other tooling, but does not own the data itself.
 
-The failure mode is when domain ownership becomes domain isolation: teams build pipelines that do not conform to platform standards, use different naming conventions, and cannot be joined reliably across domains. Platform guardrails prevent this. Ownership without guardrails is just decentralised chaos.
+The other important guardrail from the platform is standardization. Enforcing standards as part of the platform prevents teams from building pipelines that do not conform to agreed contracts, using different naming conventions, and build tables with fields which cannot be joined reliably across domains. 
 
-What it looks like in practice when a team takes genuine responsibility for their data products: they write column descriptions that explain business meaning, not just data type. They define the grain explicitly. They version their schemas. They own their SLA and are paged when they miss it. The difference between a team that owns their data and a team that merely produces it is visible in the quality of the metadata.
+What it looks like in practice when a team is responsible for their data products:
+- they write column descriptions that explain business meaning, not just data type.
+- they define the grain explicitly.
+- they version their schemas.
+- they own their SLA and are paged when they miss it.
+
+The difference between a team that owns their data and a team that merely produces it is visible in the quality of the metadata.
 
 ---
 
 ## Data contracts
 
-A data contract is the explicit agreement between a data producer and its consumers. It covers four things: schema, grain, SLAs, and the breaking-change policy.
+A data contract is the explicit agreement between a data producer and its consumers. It mainly covers four things: schema, grain, SLAs, and the breaking-change policy.
 
 **Schema:** what columns exist, their types, and which are nullable.
 
-**Grain:** what one row represents — one event, one account per day, one transaction. This is the most commonly undocumented and most commonly violated property. Grain errors are dangerous because the results they produce are not obviously wrong — they are plausible, well-formatted, and incorrect.
+**Grain:** what one row represents — one event, one account per day, one transaction. This is the most commonly undocumented and most commonly violated property.
 
 **SLA:** when the data is available and how fresh it is guaranteed to be.
 
 **Breaking-change policy:** what constitutes a breaking change, how much notice consumers receive, and what the migration path looks like.
 
-The specific failure mode that convinced me contracts were not optional: 
-a producer table had a column silently retyped from integer to string during a routine pipeline refactor. The downstream Gold table schema validation caught it six hours later, after three dashboards had already served incorrect aggregations to business stakeholders. Tracing the root cause took two engineers most of a day. The fix took twenty minutes. A contract with a breaking-change policy would have prevented the silent retype from reaching downstream without a version bump and consumer notification.
+An example scenario: 
+a producer table's column type was recently changed from integer to string during a routine pipeline refactor. The downstream Gold table schema data quality check caught it six hours later, after three dashboards had already served incorrect aggregations to business stakeholders. Tracing the root cause took two engineers almost a day. The fix took twenty minutes thereafter.
+A contract with a breaking-change policy would have prevented the type change from reaching downstream without a version increment and consumer notification.
 
 ---
 
 ## Governance and access
 
-Data classification is the foundation. Before you can apply access controls, you need to know what you have: PII, financial data, internal-only metrics, publicly referenceable aggregates. Unity Catalog's tagging system handles this if used consistently — and "if used consistently" is doing significant work in that sentence.
+Data classification precedes access control decisions. Before you can apply access controls, you need to know if the incoming data contains: PII, user generated content, financial data, internal-only metrics, publicly referenceable aggregates. For instance, Databricks Unity Catalog's tagging system handles this if used consistently.
 
-RBAC (role-based) and ABAC (attribute-based) access controls operate at different granularities. RBAC is table-level and schema-level. ABAC is row-level and column-level — masking a PII column for one role 
-while exposing it to another. Both are necessary. RBAC alone leaves too much exposed; ABAC alone is difficult to audit.
+Access controls in most cloud platforms include RBAC (role-based) and ABAC (attribute-based) access controls which provide controls at different granularities. RBAC is table-level and schema-level. ABAC is row-level and column-level. For example, they could be used to mask a PII column for one role while exposing it to another.
 
-PII handling is not just masking. It is retention policies, audit logging of who accessed what, and ensuring that PII does not leak through derived columns or aggregations that are re-identifiable. The last one is the most commonly missed: a count-by-postcode table is not PII, but a count-by-postcode-by-age-bracket with small cell sizes can re-identify individuals. Governance in regulated environments has to 
-account for derived sensitivity, not just source sensitivity.
+PII handling includes masking, but it also includes retention policies, audit logging of who accessed what, and ensuring that PII does not leak through derived columns or aggregations. Governance in regulated environments has to account for derived sensitivity, not just source sensitivity.
 
 ---
 
 ## Making data findable and traceable
 
-Lineage is the one capability organisations invest in last and regret most.
+Lineage is the one capability organisations invest in last and struggle to get it right for a long time later.
 
-When a number in a board-level dashboard is wrong, the first question is always "where does this come from?" Without lineage, that question takes days to answer — often involving archaeology through pipeline 
-code, Airflow DAG histories, and Slack message searches. With lineage, it is a query.
+When a number in a board-level dashboard is wrong, the first question is always "where does this come from?" Without lineage, that question takes days to answer without end-to-end data flow lineage. With lineage, it is a simple query of the tables storing the lineage relationships.
 
 What a catalogue is actually for — versus what people think it is for: 
 most teams treat the data catalogue as a documentation project. A place to write descriptions and tag tables. That is the wrong framing. A catalogue is a runtime artefact. It reflects the live state of the data platform: what tables exist, what they contain, who owns them, when they were last updated, and how they relate to each other. Documentation that lives separately from the pipeline inevitably falls behind the pipeline. Descriptions written at data product creation time — as part of the schema definition — stay current because they are versioned alongside the schema.
@@ -146,30 +166,29 @@ more accurate than one added retroactively when a compliance audit surfaces it.
 
 Data observability covers five properties: freshness, volume, distribution, schema, and lineage.
 
-**Freshness:** is the data as recent as the SLA promises?
+**Freshness:** is the data as recent as defined in the SLA?
 
-**Volume:** are row counts within expected bounds? A pipeline that 
-silently drops 40% of records is a governance failure, not just an 
-engineering one.
+**Volume:** are row counts within expected bounds? Are we recording the % of deviation from the average row counts for the past 30 days?
 
-**Distribution:** are column value distributions stable? A shift in 
-the distribution of a key dimension is often the first signal of 
-an upstream data quality issue — before any explicit data quality 
-check fires.
+**Distribution:** are column value distributions stable? A shift in the distribution of a key dimension is often the first signal of an upstream data quality issue
 
 **Schema:** did the schema change without a corresponding contract update?
 
 **Lineage:** can you trace a value in a Gold table back to its source system?
 
-The ownership question matters more than the tooling. A team that owns their data product owns the observability signals for that product. They set the expected volume bounds. They define what "freshness" means for their SLA. They are paged when the distribution shifts. Observability tooling without ownership is just dashboards nobody acts on.
+The ownership question matters more than the tooling. A team that owns their data product owns the observability signals for that product.
 
-How we built observability into pipelines without making it someone's full-time job: by making it declarative. Expected row count ranges, null rate thresholds, and distribution bounds are defined in the data product specification alongside the schema. The pipeline validates against them at each layer boundary. Violations block promotion from Bronze to Silver. This is not a separate observability system — it is the pipeline enforcing the contract at runtime.
+- They set the expected volume numbers.
+- They define what "freshness" means for their SLA.
+- They are paged when the distribution shifts.
+
+By making observability declarative, we built it into pipelines without making it another task to be performed later. Expected row count ranges, null rate thresholds, and distribution are defined in the data product specification alongside the schema. The pipeline validates against them at each layer. Violations block promotion from Bronze to Silver. This is not a separate observability system — it is the pipeline enforcing the contract at runtime.
 
 ---
 
 ## Semantic layer
 
-One governed definition per metric. This is the principle that most data teams agree with and almost none implement consistently.
+One governed definition per metric. This is the principle that most data teams agree with consistently.
 
 A semantic layer sits between the physical data model and the consumer — whether that consumer is a BI tool, an analyst running SQL, or an AI agent generating queries. It defines what "revenue" means, what "active user" means, what time zone "today" refers to. One definition, one place, applied consistently.
 
@@ -220,14 +239,13 @@ These are not edge cases. They are the default state of an ungoverned lakehouse 
 
 ---
 
-## What I would tell someone starting this from scratch
+## Conclusion
 
-Governance done early feels like overhead. It pays back quickly.
+Governance done early feels like overhead. It pays in the long term.
 
 The things I would do on day one that I did not do on day one: define the data contract structure before any team writes their first pipeline. Agree on the naming conventions before any table is created. Make 
-column descriptions mandatory at schema definition time, not optional at documentation time. Instrument lineage from the start, not after the first incident that requires it.
+column descriptions mandatory at schema definition time, not optional at documentation time. Instrument lineage from the start.
 
 The hardest part of building a governed lakehouse is not the tooling. It is the organisational discipline to maintain standards as the number of teams, tables, and consumers grows. Platform guardrails help, but they do not substitute for teams that genuinely own their data products.
 
-Governance is not a project with an end date. It is an engineering discipline — built into the architecture, maintained by the teams that own the data, and enforced by the platform. The moment you treat it 
-as a compliance checkbox, you have already lost. The moment you treat it as a product requirement, you have a lakehouse that can actually support the AI applications your organisation is building on top of it.
+Governance is an engineering discipline — built into the architecture, maintained by the teams that own the data, and enforced by the platform.
