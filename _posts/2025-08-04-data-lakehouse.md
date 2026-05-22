@@ -194,15 +194,18 @@ A semantic layer sits between the physical data model and the consumer — wheth
 
 Without it, different teams build their own definitions in their own tools. The organisation ends up with five different revenue numbers depending on which dashboard you open. This is not a data quality problem — it is a governance problem. The data is correct; the definitions are inconsistent.
 
-The semantic layer is also where the connection to AI readiness becomes concrete. An AI agent generating SQL against your lakehouse will use whatever metric definitions it can infer from column names and table descriptions. If those definitions are inconsistent, the agent produces inconsistent results. A governed semantic layer is not optional for AI-powered analytics — it is the prerequisite.
+The semantic layer is also where the connection to AI readiness becomes concrete. An AI agent generating SQL against your lakehouse will use whatever metric definitions it can infer from column names and table descriptions. If those definitions are inconsistent, the agent produces inconsistent results.
 
 ---
 
 ## AI-readiness
 
-This is where governance stops being an internal engineering concern and becomes a product requirement. An LLM querying your lakehouse — whether through a natural language query interface, a RAG pipeline, or a custom agent — depends entirely on the quality of your metadata. Column descriptions that say "flag" or "id" are useless to a language model. Column descriptions that say "binary indicator set to 1 when the account has had an active subscription within the last 30 days" are genuinely useful. The difference between a Genie Space that returns accurate results and one that hallucinates is largely determined by the quality of the column-level annotations in Unity Catalog.
+An LLM querying your lakehouse — whether through a natural language query interface, a RAG pipeline, or a custom agent — depends entirely on the quality of your metadata. Column descriptions that say "flag" or "id" are useless to a language model. Column descriptions that say "binary indicator set to 1 when the account has had an active subscription within the last 30 days" are genuinely useful. The difference between a Genie Space that returns accurate results and one that hallucinates is largely determined by the quality of the column-level annotations in Unity Catalog.
 
-AI-readiness means descriptions are written for a language model, not a data engineer. It means embeddings exist for columns and tables so that semantic search over the data catalogue works. It means agent-accessible metadata — what tables exist, what they contain, how they relate — is current and accurate, which is only possible if it is maintained at data product definition time rather than retroactively.
+AI-readiness means:
+- descriptions are written for a language model, not a data engineer.
+- embeddings exist for columns and tables so that semantic search over the data catalogue works.
+- agent-accessible metadata — what tables exist, what they contain, how they relate — is current and accurate. This is possible if it is maintained at data product definition time rather than retroactively.
 
 A lakehouse without this is not AI-ready. Point an LLM at undocumented tables with opaque column names and you will get confident, plausible, wrong answers. The data quality problem that used to surface as a 
 wrong number in a dashboard now surfaces as a confident hallucination in an AI system that business users trust more, not less, than the dashboard it replaced.
@@ -225,17 +228,15 @@ This is what governance built into the architecture looks like, as opposed to go
 
 ---
 
-## What ungoverned looks like
+## Ungoverned data platforms
 
-It is useful to name the failure modes directly:
+These are some problems arise in a data platform without governance:
 
 - **Definition drift** — the same metric calculated differently by  different teams, diverging silently over months
 - **Undocumented PII** — personal data in columns that are not tagged, not masked, and not audited; a compliance exposure that nobody knows about until it matters
 - **Broken lineage** — a pipeline refactored six months ago but the lineage graph never updated, so the dependency map is wrong
 - **Dashboard divergence** — two dashboards showing different numbers for the same metric, both technically correct by their own definitions, neither trustworthy
 - **Small-file proliferation** — hundreds of thousands of tiny Parquet files accumulating in a Bronze table with no compaction policy, degrading query performance progressively until someone notices
-
-These are not edge cases. They are the default state of an ungoverned lakehouse at scale.
 
 ---
 
