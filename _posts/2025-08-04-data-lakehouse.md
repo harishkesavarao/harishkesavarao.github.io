@@ -8,6 +8,7 @@ description: >
   across an organisation — what the architecture decisions actually look like, 
   why governance has to be structural rather than aspirational, and what 
   happens when you skip it.
+pinned: true
 ---
 
 ## Introduction
