@@ -59,67 +59,71 @@ the right call. As the system matures and more teams begin using it, the cost of
 
 Martin Fowler's Design Stamina Hypothesis captures this well.
 
-**Before implementing, assess the trade-offs:**
+**Before implementing, assess the trade-offs between:**
 
-- Complexity vs. Analytical Flexibility
-- Standardization vs. Usability
-- Data Quality vs. Usability
-- Cost vs. Performance
-- Time vs. Features
-
-These tensions are real and recur in every data project. Making them explicit
-before implementation prevents decisions from being made implicitly, usually
-under time pressure, in ways that are hard to reverse.
+- Architectural complexity vs. Analytical Flexibility
+- Platform standardization vs. Usability
+- Cost vs. Performance vs. Accuracy (some teams are okay with approximations)
+- Time of delivery vs. Feature lists
 
 ---
 
 ## Some suggestions during data modeling
 
-**Build partnerships:** With upstream data producers and downstream data consumers. Get frequent and early feedback during the design phase. A model that is technically correct but does not serve the people who use it is not a good model.
+**Build partnerships:** With upstream data producers and downstream data consumers. Get frequent and early feedback during the design phase.
 
-**Intentional modeling:** Understand the key entities before touching a tool. Move deliberately from a logical model to a physical model rather than jumping
-straight to implementation.
+**Intentional modeling:** Understand the key entities. Progress from a logical model to a physical model with clear objectives for each model type.
 
-**Understand the data:** Understand attributes, profile the data, and map attributes to business impact. The data will surprise you; profiling surfaces those surprises before they become production issues.
+**Understand the data:** Understand attributes, profile the data, and map attributes to business taxonomy. This also helps in understanding the quality of data.
 
 **Consider the bigger picture:** Where does this model fit in the overall architecture? Can existing components be reused? Can this model complement rather than duplicate other models?
 
-**Build data quality into the design:** Work with users to set expectations upfront. Profile the data and establish data contracts as part of the design process, not as an afterthought.
+**Build data quality into the design:** Profile the data and include data quality as part of the design process. This step also helps decide the kinds of checks needed to be built to ensure the data is correct and reliable. Get feedback from all user types in this phase.
 
-**Data contracts** Define specifications, service level agreements, and metadata for discoverability. A data contract is the explicit agreement between a producer and its consumers. Without it, consumers build on assumptions that will eventually be violated.
+**Data contracts** Define specifications, service level agreements, semantics, data quality and metadata for discoverability.
 
 ---
 
-## Implementation — design aspects and choices
+## Implementation: design aspects and choices
 
-When moving from design to implementation, a set of specific decisions need to be made. These are not one-time decisions. They come up repeatedly across
-every data product.
+Think of these design aspects and choices:
 
 **Build vs. extend:** Does the requirement need a solution from scratch, or can an existing solution be enhanced or extended? Extending is almost always faster and cheaper when feasible. The temptation to build from scratch is worth resisting until it is clearly necessary.
 
-**Data sources:** Are you using the right data source? Are there alternative sources? If the source changes, how is that change communicated to downstream consumers? Source stability is often underestimated as a design concern.
+**Data sources:** 
+- Are you using the right data source? What are your data contracts with the owners? 
+- Have we assessed data quality and is it acceptable by you and your users? If not, what are the alternatives? Are there other sources? 
+- If the source changes or there is a change in the data schema or other metadata, how is that change communicated to downstream consumers? How does the data contract manage it? 
 
-**Last-mile consumption:** What use cases exist today, and what other use cases could be solved by the same model? How are users going to consume the data? Materialization vs. views. Normalization vs. dimensional model (wide table for reports). The consumption pattern should drive the physical model design, not the other way around.
+**Last-mile consumption:** 
+- What use cases exist today, and what other use cases could be solved by the same model? 
+- How are users going to consume the data? 
+- Materialization vs. views. Normalization vs. dimensional model (wide table for reports). 
 
-**Cost:** Data retention requirements and compute and storage costs. These are engineering decisions with real budget consequences. Retention policies in particular are often decided too late, after data has already accumulated at a cost nobody budgeted for.
+**Costs:** Data retention requirements, performance vs. compute and storage costs. Some use cases do not need sub-second latency as long as the data is of good quality while for others, accuracy matters as much as on-time data delivery. Choices need to be taken accordingly. Additionally, the cost justification should also be quantified from the business value that the data provides to users - such as enabling them make better and faster decisions or allowing them to see data points which were previously not available.
 
-**ETL strategy:** — incremental vs. full load. Change capture mechanisms. An incremental strategy is almost always preferable at scale but introduces complexity around change detection and idempotency. The trade-off needs to be made consciously.
+**ETL strategy:** Incremental vs. full load. Change capture mechanisms.
 
-**Batch vs. real-time:** Five dimensions to evaluate: latency, volume, cost, complexity, and consistency. Real-time processing is not always better. For many analytical use cases, batch processing with a well-defined SLA is simpler, cheaper, and more reliable.
+**Batch vs. real-time:** These largely depend on: 
+- latency
+- volume
+- cost
+- complexity
+- consistency
 
-**Optimization:** Maintenance (optimize commands, vacuuming), partitioning, clustering, read efficiency, write efficiency. Optimization decisions made at design time are much cheaper than those retrofitted after a system is in production.
+**Optimization:** Maintenance (optimize commands, vacuuming), partitioning, clustering, read efficiency, write efficiency. Optimization is a continuous exercise, requiring measurements of job runtimes, read and write delays and last-mile data refresh performance. Based on the numbers from these measurements, appropriate optimization techniques could be used. 
 
-**Communication strategy:** Early feedback, dependency management upstream and downstream, and adoption. A technically excellent model that nobody uses or that breaks downstream consumers on every schema change is not a success. Communication and dependency management are engineering concerns, not soft skills.
+**Communication strategy:** Early feedback, dependency management with upstream and downstream users, and user adoption are part of this process. Frequent feedback loops increase user adoption. Frequent, clear and direct communication allow users to be prepared of upcoming changes in data or other artifacts generated out of the pipelines.
 
 ---
 
 ## Three principles to carry forward
 
-**Customer first:** Build only if you know the data will be used. Get early and constant feedback. The cost of building something that nobody uses is not just the initial engineering time. It is the ongoing maintenance cost of a system that adds no value.
+**Customer first:** Build only if you know the data will be used. Get early and constant feedback. 
 
-**It is a continuous journey:** Data architecture is iterative. Do not let perfect be the enemy of good. Ship things, learn from them, and improve. The goal is not to get the design right the first time; it is to design in a way that makes iteration possible.
+**It is a continuous journey:** Data architecture is iterative. Do not let perfect be the enemy of good. Ship things fast, learn from them, and improve.
 
-**Your design will be around:** Ensure that your design stands the test of time, scalability, and extensibility. The decisions made in week one follow a system for years. Design with that in mind.
+**Your design will be around:** Ensure that your design stands the test of time, scalability, and extensibility.
 
 ---
 
