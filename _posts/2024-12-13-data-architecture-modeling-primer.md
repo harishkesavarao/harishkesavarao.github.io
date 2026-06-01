@@ -14,13 +14,14 @@ possible to cover the breadth and depth of these over a single post. However, th
 
 ---
 
-## Key themes
+## Key topics
 
-There are three themes we cover here:
+There are four topics we cover here:
 
-- Assessing a requirement and most importantly, before building anything
-- Thinking about data architecture and data modeling as a discipline, not just a technical task
-- Implementing the best possible solution given real-world constraints (this is where we discuss trade-offs)
+- Assessing a data project's requirement
+- Trade-offs 
+- Suggestions for data modeling
+- Implementation: design aspects and choices
 
 ---
 
