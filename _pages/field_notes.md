@@ -12,6 +12,8 @@ nav_order: 6
 ## Blogs
 
 - A collection of data engineering [blogs](https://www.confessionsofadataguy.com/top-10-data-engineering-blogs/) from across organizations
+- [Semantic Search and RAG for Hacker News](https://github.com/afiodorov/hn-search) and a vector search application [example](https://clickhouse.com/docs/getting-started/example-datasets/hackernews-vector-search-dataset)
+- [Open Source Data Engineering](https://github.com/gunnarmorling/awesome-opensource-data-engineering)
 
 ---
 
@@ -26,3 +28,6 @@ nav_order: 6
 
 - [Data-Driven Detection using PySpark](https://www.sei.cmu.edu/library/data-driven-detection-using-pyspark/) - _I was part of this during my time at Databricks_
 
+## Books
+
+- [Data Engineering Group](https://www.goodreads.com/list/show/146550.Data_Engineering_Group)
