@@ -3,7 +3,7 @@ layout: page
 title: technical notes
 permalink: /technical_notes/
 description: Short-form technical observations on data engineering, infrastructure, and systems.
-nav: true
+nav: false
 nav_order: 5
 ---
 
