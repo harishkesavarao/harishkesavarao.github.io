@@ -22,7 +22,8 @@ nav_order: 6
 
 - BAIR blog on [Compound AI systems](https://bair.berkeley.edu/blog/2024/02/18/compound-ai-systems/) and [what are they?](https://www.databricks.com/blog/what-are-compound-ai-systems)
 - Some good [posts](https://blog.reachsumit.com/posts/) on text retrieval and LLMs
-- [Readings in Databases](https://github.com/rxin/db-readings) from [rxin](https://x.com/rxin). 
+- [Readings in Databases](https://github.com/rxin/db-readings) from [rxin](https://x.com/rxin).
+- [Zerrow: True Zero-Copy Arrow Pipelines in Bauplan](https://arxiv.org/abs/2504.06151v2): _I was playing around with Polars for a side project recently and this is an interesting related read on zero-copy._
 
 ---
 
