@@ -14,6 +14,7 @@ nav_order: 6
 - A collection of data engineering [blogs](https://www.confessionsofadataguy.com/top-10-data-engineering-blogs/) from across organizations
 - [Semantic Search and RAG for Hacker News](https://github.com/afiodorov/hn-search) and a vector search application [example](https://clickhouse.com/docs/getting-started/example-datasets/hackernews-vector-search-dataset)
 - [Open Source Data Engineering](https://github.com/gunnarmorling/awesome-opensource-data-engineering)
+- [A good read about LTAP](https://www.databricks.com/blog/lakebase-ltap-rethinking-database-storage) by Reynold Xin
 
 ---
 
@@ -21,6 +22,7 @@ nav_order: 6
 
 - BAIR blog on [Compound AI systems](https://bair.berkeley.edu/blog/2024/02/18/compound-ai-systems/) and [what are they?](https://www.databricks.com/blog/what-are-compound-ai-systems)
 - Some good [posts](https://blog.reachsumit.com/posts/) on text retrieval and LLMs
+- [Readings in Databases](https://github.com/rxin/db-readings) from [rxin](https://x.com/rxin). 
 
 ---
 
