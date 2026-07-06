@@ -19,5 +19,4 @@ latest_posts: true  # includes a list of the newest posts
 social: true  # includes social icons at the bottom of the page
 ---
 
-I am a Data Engineer by experience, although most of my work over the past decade has also been with Data Platforms. I have worked in teams of different sizes and objectives, across a variety of tech stacks, including AWS, Azure, Databricks, PySpark and Airflow. 
-I am an open-source contributor and I also blog about data.
+I am a Data Engineer, with a majority of my recent roles involving Data Platforms. My journey in data started in technical presales in the relational world, such as Oracle, Postgres and SQL Server, moving onto on-premise big data with Hadoop, Spark, Kubernetes, Docker and eventually onto the cloud with AWS, Azure and Databricks. More recently, I have been utilizing my skills to cater to AI and ML use cases to power agents, and ML models for sentiments, themes and features. I have worked in teams of different sizes and objectives, ranging from one member teams to 30 member teams, across a variety of tech stacks. I am also an open-source contributor and I blog about data.
