@@ -15,8 +15,8 @@ nav_order: 6
 - [Semantic Search and RAG for Hacker News](https://github.com/afiodorov/hn-search) and a vector search application [example](https://clickhouse.com/docs/getting-started/example-datasets/hackernews-vector-search-dataset)
 - [Open Source Data Engineering](https://github.com/gunnarmorling/awesome-opensource-data-engineering)
 - [A good read about LTAP](https://www.databricks.com/blog/lakebase-ltap-rethinking-database-storage) by Reynold Xin
-- Spotify on [Indexing the Data Lake for Online Point Queries](https://engineering.atspotify.com/2026/7/indexing-the-data-lake-for-online-point-queries) using Random Access Parquet
-- Atlassian on [scaling StreamHub](https://www.atlassian.com/blog/how-we-build/scaling-streamhub-transitioning-from-kinesis-to-kafka-for-145-billion-daily-events), transitioning from Kinesis to Kafka for 145 billion daily events
+- Spotify blog on [Indexing the Data Lake for Online Point Queries](https://engineering.atspotify.com/2026/7/indexing-the-data-lake-for-online-point-queries) using Random Access Parquet
+- Atlassian blog on [scaling StreamHub](https://www.atlassian.com/blog/how-we-build/scaling-streamhub-transitioning-from-kinesis-to-kafka-for-145-billion-daily-events), transitioning from Kinesis to Kafka for 145 billion daily events
 - Databricks [August 2026 release notes](https://docs.databricks.com/aws/en/release-notes/product/2026/august), including Unity AI Gateway going GA
 
 ---
