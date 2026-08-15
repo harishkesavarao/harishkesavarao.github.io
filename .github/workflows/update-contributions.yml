@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,6 +26,8 @@ jobs:
         run: python3 bin/update_open_source_contributions.py
 
       - name: Commit changes if any
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if git diff --quiet -- _pages/open_source.md; then
             echo "No changes to commit"
@@ -32,6 +35,13 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          branch="update-open-source-contributions-$(date +%Y%m%d%H%M%S)"
+          git checkout -b "$branch"
           git add _pages/open_source.md
           git commit -m "Update open source contributions [automated]"
-          git push
+          git push origin "$branch"
+          gh pr create \
+            --title "Update open source contributions [automated]" \
+            --body "Automated update of open source contributions." \
+            --base master \
+            --head "$branch"
