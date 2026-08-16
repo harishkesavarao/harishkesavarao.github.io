@@ -27,6 +27,10 @@ This page is generated automatically from GitHub pull request activity across @h
 - [Ecosystem page for Apache Burr](https://github.com/apache/burr/pull/661) — merged (Feb 16, 2026)
 - [Update project references to Apache Burr and remove DAGWorks attributions](https://github.com/apache/burr/pull/659) — merged (Feb 15, 2026)
 
+#### apache/magpie
+
+- [docs(security): add reporter-unresponsiveness escalation per ASF policy to security-issue-sync](https://github.com/apache/magpie/pull/1073) — open, in review (Aug 07, 2026)
+
 #### datahub-project/datahub
 
 - [Make Airflow plugin fully compatible with Airflow (WIP: partial changes)](https://github.com/datahub-project/datahub/pull/14482) — open, in review (Aug 17, 2025)
