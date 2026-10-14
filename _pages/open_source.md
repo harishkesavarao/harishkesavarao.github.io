@@ -29,7 +29,7 @@ This page is generated automatically from GitHub pull request activity across @h
 
 #### apache/magpie
 
-- [docs(security): add reporter-unresponsiveness escalation per ASF policy to security-issue-sync](https://github.com/apache/magpie/pull/1073) — open, in review (Aug 07, 2026)
+- [docs(security): add reporter-unresponsiveness escalation per ASF policy to security-issue-sync](https://github.com/apache/magpie/pull/1073) — merged (Aug 07, 2026)
 
 #### datahub-project/datahub
 
